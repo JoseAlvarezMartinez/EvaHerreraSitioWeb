@@ -1,0 +1,350 @@
+---
+import Base from '../layouts/Base.astro';
+import Folio from '../components/Folio.astro';
+import Flecha from '../components/Flecha.astro';
+import { pagina } from '../data/sitio';
+import { contacto } from '../data/contacto';
+import { enlaceWhatsapp } from '../lib/enlaces';
+
+const p = pagina('contacto');
+const f = contacto.formulario;
+---
+
+<Base titulo={p.nombre} descripcion={p.descripcion} conLlamado={false}>
+  <Folio numero={p.numero} nombre={p.nombre} titulo={p.titulo} enfasis={p.enfasis} intro={contacto.intro} />
+
+  <section class="canales" aria-labelledby="canales-titulo" data-linea>
+    <div class="marco grilla">
+      <header class="canales__cab" data-aparece>
+        <span class="num">{p.numero}.1</span>
+        <h2 class="etiqueta" id="canales-titulo">Canales directos</h2>
+      </header>
+
+      <ul class="canales__lista">
+        <li data-aparece>
+          <a class="canal" href={enlaceWhatsapp()} target="_blank" rel="noopener noreferrer">
+            <span class="etiqueta tenue">WhatsApp</span>
+            <span class="canal__valor titulo-m">{contacto.whatsapp.visible}</span>
+            <Flecha diagonal />
+          </a>
+        </li>
+        <li data-aparece style="--i:1">
+          <a class="canal" href={`mailto:${contacto.email}`}>
+            <span class="etiqueta tenue">Email</span>
+            <span class="canal__valor titulo-m">{contacto.email}</span>
+            <Flecha diagonal />
+          </a>
+        </li>
+        {
+          contacto.redes.map((r, i) => (
+            <li data-aparece style={`--i:${i + 2}`}>
+              <a class="canal" href={r.url} target="_blank" rel="noopener noreferrer">
+                <span class="etiqueta tenue">{r.nombre}</span>
+                <span class="canal__valor titulo-m">{r.usuario}</span>
+                <Flecha diagonal />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="canales__nota chico tenue" data-aparece>{contacto.horarioRespuesta}</p>
+    </div>
+  </section>
+
+  <section class="mensaje" aria-labelledby="mensaje-titulo" data-linea="fuerte">
+    <div class="marco grilla">
+      <header class="mensaje__cab">
+        <p class="mensaje__meta" data-aparece>
+          <span class="num">{p.numero}.2</span>
+          <span class="etiqueta">Formulario</span>
+        </p>
+        <h2 class="titulo-l" id="mensaje-titulo" data-palabras>Dejá tu <em>mensaje</em></h2>
+        <p class="chico mensaje__aviso" data-aparece style="--i:2">{f.aviso}</p>
+      </header>
+
+      <form
+        class="formulario"
+        data-formulario
+        data-destino={f.destino}
+        data-correo={contacto.email}
+        data-aparece
+        style="--i:1"
+      >
+        <div class="campo">
+          <label class="etiqueta" for="nombre">Nombre y apellido</label>
+          <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+        </div>
+
+        <div class="campo campo--mitad">
+          <label class="etiqueta" for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+        </div>
+
+        <div class="campo campo--mitad">
+          <label class="etiqueta" for="telefono">Teléfono <span class="tenue">(opcional)</span></label>
+          <input id="telefono" name="telefono" type="tel" autocomplete="tel" />
+        </div>
+
+        <div class="campo">
+          <label class="etiqueta" for="motivo">Motivo</label>
+          <select id="motivo" name="motivo" required>
+            {f.motivos.map((m) => <option value={m}>{m}</option>)}
+          </select>
+        </div>
+
+        <div class="campo">
+          <label class="etiqueta" for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+        </div>
+
+        <div class="campo--trampa" aria-hidden="true">
+          <label for="sitio_web">No completar este campo</label>
+          <input id="sitio_web" name="sitio_web" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="formulario__pie">
+          <p class="chico tenue">{f.privacidad}</p>
+          <button class="cta" type="submit">
+            Enviar mensaje
+            <Flecha />
+          </button>
+        </div>
+        <p class="formulario__estado chico" data-estado role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- Canales ---------- */
+  .canales {
+    padding-block: var(--aire-chico) var(--aire);
+    border-top: 1px solid var(--linea);
+  }
+
+  .canales__cab,
+  .mensaje__meta {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+  }
+
+  .canales__cab {
+    grid-column: 1 / 4;
+    align-self: start;
+  }
+
+  .canales__lista {
+    grid-column: 4 / -1;
+  }
+
+  .canales__lista li {
+    border-top: 1px solid var(--linea);
+  }
+
+  .canales__lista li:last-child {
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .canal {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 7fr) 2rem;
+    column-gap: var(--canal);
+    align-items: baseline;
+    padding-block: clamp(1.25rem, 2.4vw, 2.1rem);
+    text-decoration: none;
+  }
+
+  .canal__valor {
+    overflow-wrap: anywhere;
+    transition: transform 0.7s var(--curva);
+  }
+
+  .canal :global(.flecha) {
+    justify-self: end;
+    align-self: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    transition:
+      transform 0.6s var(--curva),
+      color 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .canal:hover .canal__valor,
+  .canal:focus-visible .canal__valor {
+    transform: translateX(clamp(0.5rem, 1.2vw, 1.25rem));
+  }
+
+  .canal:hover :global(.flecha),
+  .canal:focus-visible :global(.flecha) {
+    color: var(--acento);
+  }
+
+  .canales__nota {
+    grid-column: 4 / -1;
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 899px) {
+    .canales__cab,
+    .canales__lista,
+    .canales__nota {
+      grid-column: 1 / -1;
+    }
+
+    .canales__cab {
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  @media (max-width: 699px) {
+    .canal {
+      grid-template-columns: minmax(0, 1fr) 1.5rem;
+      row-gap: 0.5rem;
+    }
+
+    .canal .etiqueta {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ---------- Formulario ---------- */
+  .mensaje {
+    padding-block: var(--aire-chico) var(--aire);
+    border-top: 1px solid var(--tinta);
+  }
+
+  .mensaje .grilla {
+    row-gap: 3rem;
+    align-items: start;
+  }
+
+  .mensaje__cab {
+    grid-column: 1 / 6;
+    position: sticky;
+    top: calc(var(--alto-cab) + 1.5rem);
+  }
+
+  .mensaje__cab h2 {
+    margin-top: clamp(1.5rem, 3vw, 2.75rem);
+  }
+
+  .mensaje__aviso {
+    max-width: 27em;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-top: 1rem;
+    border-top: 1px solid var(--acento);
+  }
+
+  .formulario {
+    grid-column: 7 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--canal);
+    row-gap: 2.25rem;
+  }
+
+  .campo {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .campo--mitad {
+    grid-column: span 1;
+  }
+
+  .campo label {
+    color: var(--tinta-2);
+    transition: color 0.3s ease;
+  }
+
+  .campo:focus-within label {
+    color: var(--tinta);
+  }
+
+  .campo input,
+  .campo select,
+  .campo textarea {
+    width: 100%;
+    padding: 0.55rem 0 0.7rem;
+    border: 0;
+    border-bottom: 1px solid var(--tinta);
+    border-radius: 0;
+    background: transparent;
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 1.375rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    appearance: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .campo textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  .campo select {
+    cursor: pointer;
+    padding-right: 2rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2317140f' stroke-width='1'%3E%3Cpath d='m5 9 7 7 7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    background-size: 1.25rem;
+  }
+
+  .campo input:focus-visible,
+  .campo select:focus-visible,
+  .campo textarea:focus-visible {
+    outline: none;
+    border-bottom-color: var(--acento);
+    box-shadow: 0 1px 0 var(--acento);
+  }
+
+  .campo--trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .formulario__pie {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+  }
+
+  .formulario__pie p {
+    flex: 1 1 16rem;
+    max-width: 26em;
+  }
+
+  .formulario__estado {
+    grid-column: 1 / -1;
+    min-height: 1.5em;
+  }
+
+  @media (max-width: 899px) {
+    .mensaje__cab,
+    .formulario {
+      grid-column: 1 / -1;
+    }
+
+    .mensaje__cab {
+      position: static;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .campo--mitad {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

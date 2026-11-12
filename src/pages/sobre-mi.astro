@@ -1,0 +1,201 @@
+---
+import Base from '../layouts/Base.astro';
+import Folio from '../components/Folio.astro';
+import Seccion from '../components/Seccion.astro';
+import Foto from '../components/Foto.astro';
+import { sitio, pagina } from '../data/sitio';
+import { sobre } from '../data/sobre';
+
+const p = pagina('sobre');
+---
+
+<Base titulo={p.nombre} descripcion={p.descripcion} actual="sobre">
+  <Folio numero={p.numero} nombre={p.nombre} titulo={p.titulo} enfasis={p.enfasis} />
+
+  <section class="retrato marco grilla" aria-label="Biografía">
+    <figure class="retrato__foto">
+      <div data-aparece="cortina">
+      <Foto
+        archivo={sobre.foto}
+        alt={`Retrato de la ${sitio.tratamiento} ${sitio.nombreCompleto}`}
+        iniciales={sobre.iniciales}
+        tono={1}
+        proporcion="4 / 5"
+        anchos={[480, 800, 1200]}
+        sizes="(min-width: 900px) 40vw, 92vw"
+        prioridad
+        paralaje
+      />
+      </div>
+      <figcaption class="etiqueta tenue" data-aparece style="--i:3">
+        <span>{sitio.tratamiento} {sitio.nombreCompleto}</span>
+        <span>{sitio.especialidad}</span>
+      </figcaption>
+    </figure>
+
+    <div class="retrato__texto">
+      <p class="titulo-m retrato__presentacion" data-palabras>{sobre.presentacion}</p>
+      <div class="retrato__bio" data-aparece style="--i:1">
+        {sobre.bio.map((parrafo) => <p class="texto">{parrafo}</p>)}
+      </div>
+      <dl class="datos retrato__ficha" data-aparece style="--i:2">
+        {
+          sobre.ficha.map((d) => (
+            <div>
+              <dt class="etiqueta">{d.etiqueta}</dt>
+              <dd>{d.valor}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <Seccion numero={`${p.numero}.1`} titulo="Filosofía de atención" id="filosofia">
+    <ol class="principios">
+      {
+        sobre.filosofia.map((f, i) => (
+          <li class="principio tarjeta" data-aparece style={`--i:${i % 2}`}>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="titulo-m">{f.titulo}</h3>
+            <p class="texto tenue">{f.texto}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Seccion>
+
+  <section class="cita marco grilla" aria-label="En sus palabras" data-linea>
+    <blockquote class="cita__texto titulo-l">
+      <p data-palabras>«{sobre.cita}»</p>
+    </blockquote>
+    <p class="cita__firma etiqueta" data-aparece style="--i:1">
+      {sitio.nombreCompleto}
+    </p>
+  </section>
+</Base>
+
+<style>
+  .retrato {
+    row-gap: 3rem;
+    padding-bottom: var(--aire);
+  }
+
+  .retrato__foto {
+    grid-column: 8 / -1;
+    grid-row: 1;
+    margin-top: calc(var(--aire-chico) * -0.4);
+  }
+
+  .retrato__foto figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.8rem;
+  }
+
+  .retrato__texto {
+    grid-column: 1 / 7;
+    grid-row: 1;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--linea);
+  }
+
+  .retrato__presentacion {
+    max-width: 17em;
+  }
+
+  .retrato__bio {
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    padding-left: calc((100% + var(--canal)) / 6);
+  }
+
+  .retrato__ficha {
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    margin-left: calc((100% + var(--canal)) / 6);
+  }
+
+  @media (max-width: 899px) {
+    .retrato__foto,
+    .retrato__texto {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+
+    .retrato__foto {
+      margin-top: 0;
+      width: 82%;
+      margin-left: auto;
+    }
+
+    .retrato__bio {
+      padding-left: 0;
+    }
+
+    .retrato__ficha {
+      margin-left: 0;
+    }
+  }
+
+  /* ---------- Filosofía ---------- */
+  .principios {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--canal);
+    row-gap: var(--canal);
+  }
+
+  .principio {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .principio h3 {
+    margin-top: 0.75rem;
+  }
+
+  .principio .texto {
+    max-width: 26em;
+  }
+
+  @media (max-width: 699px) {
+    .principios {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Cita ---------- */
+  .cita {
+    padding-block: var(--aire);
+    border-top: 1px solid var(--linea);
+    row-gap: 2rem;
+  }
+
+  .cita__texto {
+    grid-column: 2 / 12;
+    font-style: italic;
+    text-wrap: balance;
+  }
+
+  .cita__firma {
+    grid-column: 2 / 12;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cita__firma::before {
+    content: '';
+    width: 3rem;
+    height: 1px;
+    background: var(--acento);
+  }
+
+  @media (max-width: 899px) {
+    .cita__texto,
+    .cita__firma {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

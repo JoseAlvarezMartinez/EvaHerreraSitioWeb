@@ -1,0 +1,41 @@
+---
+/* Sección: rótulo con línea, titular opcional y contenido. */
+interface Props {
+  numero?: string;
+  titulo: string;
+  /** Titular grande debajo del rótulo (opcional). */
+  encabezado?: string;
+  /** Texto corto a la derecha del titular (opcional). */
+  intro?: string;
+  /** Fondo apenas más oscuro, para alternar secciones. */
+  suave?: boolean;
+  id?: string;
+}
+const { numero, titulo, encabezado, intro, suave = false, id } = Astro.props;
+---
+
+<section class:list={['seccion', { 'seccion--suave': suave }]} id={id} aria-labelledby={id ? `${id}-titulo` : undefined}>
+  <div class="marco grilla">
+    <header class="seccion__cab" data-aparece>
+      {numero && <span class="num">{numero}</span>}
+      <h2 class="etiqueta" id={id ? `${id}-titulo` : undefined}>{titulo}</h2>
+    </header>
+    {
+      encabezado && (
+        <p class="seccion__titular titulo-l" data-palabras>
+          {encabezado}
+        </p>
+      )
+    }
+    {
+      intro && (
+        <p class="seccion__intro bajada" data-aparece style="--i:2">
+          {intro}
+        </p>
+      )
+    }
+    <div class="seccion__cuerpo">
+      <slot />
+    </div>
+  </div>
+</section>

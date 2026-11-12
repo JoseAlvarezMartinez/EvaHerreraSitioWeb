@@ -1,0 +1,36 @@
+---
+/* Mapa monocromo. Usa OpenStreetMap (sin clave ni cuenta) y se tiñe con CSS. */
+interface Props {
+  lat: number;
+  lng: number;
+  titulo: string;
+}
+const { lat, lng, titulo } = Astro.props;
+const d = 0.0045;
+const caja = [lng - d * 1.4, lat - d, lng + d * 1.4, lat + d].map((n) => n.toFixed(5)).join('%2C');
+const src = `https://www.openstreetmap.org/export/embed.html?bbox=${caja}&layer=mapnik&marker=${lat}%2C${lng}`;
+---
+
+<div class="mapa">
+  <iframe src={src} title={titulo} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+
+<style>
+  .mapa {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--marfil);
+    border: 1px solid var(--linea);
+    overflow: hidden;
+  }
+
+  .mapa iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    filter: grayscale(1) contrast(1.15) brightness(1.04);
+    mix-blend-mode: multiply;
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+import { sitio, paginas } from '../data/sitio';
+import { contacto } from '../data/contacto';
+import { lugares } from '../data/lugares';
+import { enlaceWhatsapp } from '../lib/enlaces';
+import Flecha from './Flecha.astro';
+
+interface Props {
+  conLlamado?: boolean;
+}
+const { conLlamado = true } = Astro.props;
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="marco">
+    {
+      conLlamado && (
+        <div class="pie__llamado" data-aparece>
+          <svg class="pie__pulso" viewBox="0 0 520 120" fill="none" aria-hidden="true">
+            <path class="pulso__trazo" d="M0 70H170l12-10 10 10h22l10-52 16 96 12-44h26l12-14 14 14H520" />
+          </svg>
+          <p class="etiqueta tenue">Turnos en consultorio y por teleconsulta</p>
+          <h2 class="pie__grande" data-palabras>
+            Tu próxima consulta, a un <em>mensaje</em> de distancia.
+          </h2>
+          <p class="pie__texto">Escribime por WhatsApp o dejá tu mensaje. Coordinamos el día y la modalidad que te queden mejor.</p>
+          <div class="pie__acciones">
+            <a class="cta cta--claro" href={enlaceWhatsapp()} target="_blank" rel="noopener noreferrer">
+              Escribir por WhatsApp
+              <Flecha />
+            </a>
+            <a class="cta cta--linea" href={sitio.cta.destino}>
+              {sitio.cta.texto}
+            </a>
+          </div>
+        </div>
+      )
+    }
+
+    <div class="pie__cols grilla">
+      <div class="pie__col pie__col--ancha">
+        <p class="pie__firma">
+          {sitio.tratamiento} {sitio.nombreCompleto}
+        </p>
+        <p class="tenue">{sitio.especialidad}</p>
+        {sitio.matriculas.map((m) => <p class="tenue">{m}</p>)}
+      </div>
+
+      <div class="pie__col">
+        <h2 class="etiqueta">Sitio</h2>
+        <ul>
+          <li><a class="enlace" href="/">Inicio</a></li>
+          {
+            paginas.map((p) => (
+              <li>
+                <a class="enlace" href={p.ruta}>
+                  {p.nombre}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="pie__col">
+        <h2 class="etiqueta">Atención</h2>
+        <ul>
+          {
+            lugares.consultorios.map((l) => (
+              <li>
+                <a class="enlace" href="/donde-atiende/">
+                  {l.nombre}
+                </a>
+              </li>
+            ))
+          }
+          <li><a class="enlace" href="/donde-atiende/#teleconsulta">{lugares.teleconsulta.titulo}</a></li>
+        </ul>
+      </div>
+
+      <div class="pie__col">
+        <h2 class="etiqueta">Contacto</h2>
+        <ul>
+          <li>
+            <a class="enlace" href={enlaceWhatsapp()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </li>
+          <li><a class="enlace" href={`mailto:${contacto.email}`}>{contacto.email}</a></li>
+          {
+            contacto.redes.map((r) => (
+              <li>
+                <a class="enlace" href={r.url} target="_blank" rel="noopener noreferrer">
+                  {r.nombre}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="pie__base">
+      <p>© {anio} {sitio.tratamiento} {sitio.nombreCompleto}</p>
+      <p>{sitio.avisoLegal}</p>
+      <a class="enlace" href="#contenido">Volver arriba</a>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,25 @@
+---
+/* Enlace grande a la página siguiente del recorrido. */
+import { paginas, type IdPagina } from '../data/sitio';
+import Flecha from './Flecha.astro';
+
+interface Props {
+  actual: IdPagina;
+}
+const { actual } = Astro.props;
+const indice = paginas.findIndex((p) => p.id === actual);
+const sig = paginas[(indice + 1) % paginas.length];
+---
+
+<nav class="siguiente" aria-label="Página siguiente">
+  <div class="marco">
+    <a href={sig.ruta}>
+      <span class="siguiente__meta">
+        <span class="num">{sig.numero}</span>
+        <span class="etiqueta">Sigue</span>
+      </span>
+      <span class="siguiente__titulo titulo-l" data-palabras>{sig.nombre}</span>
+      <Flecha />
+    </a>
+  </div>
+</nav>

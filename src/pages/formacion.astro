@@ -1,0 +1,279 @@
+---
+import Base from '../layouts/Base.astro';
+import Folio from '../components/Folio.astro';
+import Seccion from '../components/Seccion.astro';
+import { pagina } from '../data/sitio';
+import { formacion } from '../data/formacion';
+
+const p = pagina('formacion');
+---
+
+<Base titulo={p.nombre} descripcion={p.descripcion} actual="formacion">
+  <Folio numero={p.numero} nombre={p.nombre} titulo={p.titulo} enfasis={p.enfasis} intro={formacion.intro} />
+
+  <section class="tiempo" aria-label="Línea de tiempo">
+    <div class="marco">
+      <ol class="tiempo__lista">
+        {
+          formacion.lineaDeTiempo.map((h) => (
+            <li class="hito" data-hito>
+              <p class="hito__anio" data-aparece>
+                <span class="hito__desde">{h.anio}</span>
+                {h.hasta && <span class="hito__hasta etiqueta">hasta {h.hasta}</span>}
+              </p>
+              <span class="hito__nodo" aria-hidden="true" />
+              <div class="hito__cuerpo" data-aparece style="--i:1">
+                <p class="etiqueta tenue">{h.tipo}</p>
+                <h2 class="titulo-m">{h.titulo}</h2>
+                <p class="hito__inst">{h.institucion}</p>
+                {h.detalle && <p class="texto chico tenue">{h.detalle}</p>}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <Seccion numero={`${p.numero}.1`} titulo="Cursos y actualizaciones" id="cursos">
+    <ul class="filas tabla">
+      {
+        formacion.cursos.map((c, i) => (
+          <li class="tabla__fila" data-aparece data-linea style={`--i:${i % 4}`}>
+            <span class="tabla__anio serif">{c.anio}</span>
+            <span class="tabla__nombre titulo-s">{c.nombre}</span>
+            <span class="tabla__inst tenue chico">{c.institucion}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  <Seccion numero={`${p.numero}.2`} titulo="Certificaciones" id="certificaciones">
+    <ul class="filas tabla">
+      {
+        formacion.certificaciones.map((c, i) => (
+          <li class="tabla__fila" data-aparece data-linea style={`--i:${i % 4}`}>
+            <span class="tabla__anio etiqueta tenue">Vigencia {c.vigencia}</span>
+            <span class="tabla__nombre titulo-s">{c.nombre}</span>
+            <span class="tabla__inst tenue chico">{c.entidad}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  <Seccion numero={`${p.numero}.3`} titulo="Sociedades científicas" id="sociedades">
+    <ul class="sociedades">
+      {
+        formacion.sociedades.map((s, i) => (
+          <li class="titulo-m" data-palabras style={`--i:${i}`}>
+            {s}
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+</Base>
+
+<style>
+  /* ---------- Línea de tiempo ---------- */
+  .tiempo {
+    padding-bottom: var(--aire);
+  }
+
+  .tiempo__lista {
+    position: relative;
+  }
+
+  /* Trazo de acento que avanza con el scroll hasta el centro de la pantalla. */
+  .tiempo__lista::after {
+    content: '';
+    position: absolute;
+    top: clamp(1.75rem, 3vw, 3rem);
+    bottom: 0;
+    left: calc((100% + var(--canal)) / 12 * 5 - var(--canal) / 2);
+    width: 1px;
+    background: var(--acento);
+    transform: scaleY(0);
+    transform-origin: top center;
+    pointer-events: none;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .tiempo__lista::after {
+        animation: crecer linear both;
+        animation-timeline: view(block 50% 50%);
+      }
+    }
+  }
+
+  .hito.recorrido .hito__nodo {
+    background: var(--acento);
+    border-color: var(--acento);
+  }
+
+  .hito {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--canal);
+    align-items: start;
+    padding-block: clamp(1.75rem, 3vw, 3rem);
+  }
+
+  /* La línea vertical: un tramo por hito, así queda continua. */
+  .hito::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc((100% + var(--canal)) / 12 * 5 - var(--canal) / 2);
+    width: 1px;
+    background: var(--linea);
+  }
+
+  .hito:first-child::before {
+    top: clamp(1.75rem, 3vw, 3rem);
+  }
+
+  .hito__nodo {
+    position: absolute;
+    top: calc(clamp(1.75rem, 3vw, 3rem) + clamp(0.9rem, 1.8vw, 1.8rem));
+    left: calc((100% + var(--canal)) / 12 * 5 - var(--canal) / 2);
+    width: 9px;
+    height: 9px;
+    margin-left: -4px;
+    border: 1px solid var(--tinta);
+    border-radius: 50%;
+    background: var(--marfil);
+    transition:
+      background-color 0.5s ease,
+      border-color 0.5s ease,
+      transform 0.5s var(--curva);
+  }
+
+  .hito__anio {
+    grid-column: 1 / 6;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-right: clamp(1.5rem, 4vw, 4rem);
+    text-align: right;
+  }
+
+  .hito__desde {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-optical-sizing: auto;
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    font-variant-numeric: lining-nums;
+    transition: color 0.6s ease;
+  }
+
+  .hito__hasta {
+    color: var(--tinta-2);
+  }
+
+  .hito__cuerpo {
+    grid-column: 6 / 12;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-left: clamp(1.5rem, 4vw, 4rem);
+    padding-top: clamp(0.2rem, 0.5vw, 0.6rem);
+  }
+
+  .hito__cuerpo h2 {
+    max-width: 16em;
+  }
+
+  .hito__inst {
+    max-width: 30em;
+  }
+
+  .hito.activo .hito__desde {
+    color: var(--acento);
+  }
+
+  .hito.activo .hito__nodo {
+    background: var(--acento);
+    border-color: var(--acento);
+    transform: scale(1.35);
+  }
+
+  @media (max-width: 899px) {
+    .hito {
+      grid-template-columns: 1fr;
+      padding-left: 1.75rem;
+      padding-block: 2.25rem;
+    }
+
+    .hito::before,
+    .hito__nodo,
+    .tiempo__lista::after {
+      left: 0;
+    }
+
+    .tiempo__lista::after {
+      top: 2.25rem;
+    }
+
+    .hito:first-child::before {
+      top: 2.25rem;
+    }
+
+    .hito__nodo {
+      top: calc(2.25rem + 1rem);
+    }
+
+    .hito__anio,
+    .hito__cuerpo {
+      grid-column: 1 / -1;
+      padding-inline: 0;
+      text-align: left;
+    }
+
+    .hito__anio {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .hito__desde {
+      font-size: clamp(2.75rem, 12vw, 4rem);
+    }
+
+    .hito__cuerpo {
+      padding-top: 1.25rem;
+    }
+  }
+
+  /* ---------- Tablas editoriales ---------- */
+  .tabla__fila {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 3fr);
+    column-gap: var(--canal);
+    align-items: baseline;
+    padding-block: 1.25rem;
+  }
+
+  .tabla__anio.serif {
+    font-size: 1.25rem;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  @media (max-width: 699px) {
+    .tabla__fila {
+      grid-template-columns: 1fr;
+      row-gap: 0.3rem;
+    }
+  }
+
+  .sociedades li + li {
+    margin-top: 0.6em;
+  }
+</style>

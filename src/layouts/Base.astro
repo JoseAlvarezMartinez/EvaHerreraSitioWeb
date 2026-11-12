@@ -1,0 +1,89 @@
+---
+import '@fontsource-variable/inter/index.css';
+import '../styles/global.css';
+
+import { ClientRouter } from 'astro:transitions';
+import { sitio, paginas, type IdPagina } from '../data/sitio';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+import Siguiente from '../components/Siguiente.astro';
+
+interface Props {
+  /** Título de la pestaña. Vacío en la portada. */
+  titulo?: string;
+  descripcion?: string;
+  /** Página actual: define cuál es la "siguiente" al final. */
+  actual?: IdPagina;
+  /** Muestra el llamado grande a pedir turno en el pie. */
+  conLlamado?: boolean;
+  noIndexar?: boolean;
+}
+
+const { titulo, descripcion = sitio.descripcion, actual, conLlamado = true, noIndexar = false } = Astro.props;
+
+const esInterior = Astro.url.pathname !== '/' && !noIndexar;
+const pag = paginas.find((p) => p.nombre === titulo);
+const total = String(paginas.length).padStart(2, '0');
+const firma = `${sitio.tratamiento} ${sitio.nombreCompleto}`;
+const tituloCompleto = titulo ? `${titulo} — ${firma}` : `${firma} — ${sitio.especialidad}`;
+
+const paso = {
+  old: { name: 'pagina-sale', duration: '0.6s', easing: 'cubic-bezier(0.7, 0, 0.2, 1)', fillMode: 'both' },
+  new: { name: 'pagina-entra', duration: '0.6s', easing: 'cubic-bezier(0.7, 0, 0.2, 1)', fillMode: 'both' },
+};
+const transicion = { forwards: paso, backwards: paso };
+---
+
+<!doctype html>
+<html lang="es-AR" transition:animate={transicion}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    {noIndexar && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#f3eee4" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <ClientRouter />
+    <script is:inline>
+      (() => {
+        const raiz = document.documentElement;
+        raiz.classList.add('js');
+        document.addEventListener('astro:after-swap', () => raiz.classList.add('js'));
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Ir al contenido</a>
+    <Cabecera />
+    {
+      esInterior && (
+        <nav class="miga" aria-label="Ubicación en el sitio">
+          <div class="marco miga__in">
+            <a class="volver" href="/">
+              <span aria-hidden="true">←</span> Volver al inicio
+            </a>
+            <p class="miga__ruta">
+              <a href="/">Inicio</a>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page">{titulo}</span>
+              {pag && <span class="miga__cuenta">Página {pag.numero} de {total}</span>}
+            </p>
+          </div>
+        </nav>
+      )
+    }
+    <main id="contenido">
+      <slot />
+      {actual && <Siguiente actual={actual} />}
+    </main>
+    <Pie conLlamado={conLlamado} />
+    <script>
+      import '../scripts/sitio.ts';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro';
+import Folio from '../components/Folio.astro';
+import Foto from '../components/Foto.astro';
+import { pagina } from '../data/sitio';
+import { equipo } from '../data/equipo';
+
+const p = pagina('equipo');
+const tonos = [1, 2, 4, 3, 5] as const;
+---
+
+<Base titulo={p.nombre} descripcion={p.descripcion} actual="equipo">
+  <Folio numero={p.numero} nombre={p.nombre} titulo={p.titulo} enfasis={p.enfasis} intro={equipo.intro} />
+
+  <section class="marco equipo" aria-label="Integrantes del equipo">
+    <ol class="equipo__lista">
+      {
+        equipo.integrantes.map((m, i) => (
+          <li class="miembro" tabindex="0" data-aparece data-linea style={`--i:${i % 3}`}>
+            <span class="num miembro__num">{String(i + 1).padStart(2, '0')}</span>
+            <div class="miembro__cab">
+              <h2 class="miembro__nombre titulo-l">{m.nombre}</h2>
+              <p class="miembro__rol etiqueta">{m.rol}</p>
+            </div>
+            <p class="miembro__bio chico tenue">{m.bio}</p>
+            <div class="miembro__foto">
+              <Foto
+                archivo={m.foto}
+                alt={`${m.nombre}, ${m.rol.toLowerCase()}`}
+                iniciales={m.iniciales}
+                tono={tonos[i % tonos.length]}
+                proporcion="4 / 5"
+                anchos={[240, 480, 720]}
+                sizes="(min-width: 900px) 22vw, 30vw"
+              />
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .equipo {
+    padding-bottom: var(--aire);
+  }
+
+  .miembro {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--canal);
+    align-items: baseline;
+    padding-block: clamp(1.25rem, 2vw, 2rem);
+    border-top: 1px solid var(--linea);
+    outline-offset: -1px;
+  }
+
+  .miembro:last-child {
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .miembro__num {
+    grid-column: 1 / 2;
+  }
+
+  .miembro__cab {
+    grid-column: 2 / 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    transition: transform 0.7s var(--curva);
+  }
+
+  .miembro__nombre {
+    font-size: clamp(1.7rem, 2.9vw, 2.9rem);
+  }
+
+  .miembro__rol {
+    color: var(--tinta-2);
+    transition: color 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .miembro__bio {
+    grid-column: 10 / -1;
+    max-width: 26em;
+  }
+
+  .miembro__foto {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: calc((100% + var(--canal)) / 12 * 7);
+    width: clamp(10rem, 14.5vw, 17rem);
+    pointer-events: none;
+  }
+
+  /* Escritorio con cursor: la foto aparece al pasar por la fila. */
+  @media (hover: hover) and (min-width: 900px) {
+    .miembro__foto {
+      opacity: 0;
+      clip-path: inset(100% 0 0 0);
+      transform: translateY(-46%) rotate(-2deg);
+      transition:
+        clip-path 0.75s var(--curva),
+        opacity 0.5s ease,
+        transform 0.75s var(--curva);
+    }
+
+    .miembro:nth-child(even) .miembro__foto {
+      transform: translateY(-46%) rotate(2deg);
+    }
+
+    .miembro:hover .miembro__foto,
+    .miembro:focus-visible .miembro__foto {
+      opacity: 1;
+      clip-path: inset(0);
+      transform: translateY(-50%) rotate(-2deg);
+    }
+
+    .miembro:nth-child(even):hover .miembro__foto,
+    .miembro:nth-child(even):focus-visible .miembro__foto {
+      transform: translateY(-50%) rotate(2deg);
+    }
+
+    .miembro:hover .miembro__cab,
+    .miembro:focus-visible .miembro__cab {
+      transform: translateX(clamp(0.5rem, 1.4vw, 1.5rem));
+    }
+
+    .miembro:hover .miembro__rol,
+    .miembro:focus-visible .miembro__rol {
+      color: var(--acento);
+    }
+
+    .equipo__lista:hover .miembro:not(:hover) .miembro__cab,
+    .equipo__lista:hover .miembro:not(:hover) .miembro__bio,
+    .equipo__lista:hover .miembro:not(:hover) .miembro__num {
+      opacity: 0.32;
+    }
+
+    .miembro__cab,
+    .miembro__bio,
+    .miembro__num {
+      transition:
+        opacity 0.5s ease,
+        transform 0.7s var(--curva);
+    }
+  }
+
+  /* Pantallas táctiles o chicas: la foto siempre visible, dentro de la fila. */
+  @media (hover: none), (max-width: 899px) {
+    .miembro {
+      grid-template-columns: 2rem minmax(0, 1fr) clamp(5.5rem, 28vw, 11rem);
+      column-gap: 1rem;
+      row-gap: 0.9rem;
+      align-items: start;
+    }
+
+    .miembro__num {
+      grid-column: 1;
+      grid-row: 1;
+      padding-top: 0.5rem;
+    }
+
+    .miembro__cab {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .miembro__nombre {
+      font-size: clamp(1.45rem, 5vw, 2.1rem);
+      line-height: 1.02;
+    }
+
+    .miembro__bio {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .miembro__foto {
+      position: static;
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+import { sitio, paginas } from '../data/sitio';
+import { rutaNormalizada } from '../lib/enlaces';
+import Flecha from './Flecha.astro';
+
+const actual = rutaNormalizada(Astro.url.pathname);
+---
+
+<header class="cab" data-cab transition:name="cabecera" transition:animate="none">
+  <div class="marco cab__in">
+    <a class="cab__marca" href="/" aria-label={`${sitio.tratamiento} ${sitio.nombreCompleto}, inicio`}>
+      <span class="latido" aria-hidden="true"></span>
+      <span class="cab__nombre">{sitio.tratamiento} {sitio.nombreCompleto}</span>
+    </a>
+
+    <nav class="cab__nav" aria-label="Páginas del sitio">
+      <ul>
+        <li>
+          <a href="/" aria-current={actual === '/' ? 'page' : undefined}>Inicio</a>
+        </li>
+        {
+          paginas.map((p) => (
+            <li>
+              <a href={p.ruta} aria-current={actual === p.ruta ? 'page' : undefined}>
+                {p.nombre}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="cab__lado">
+      <a class="cab__turno enlace" href={sitio.cta.destino}>{sitio.cta.texto}</a>
+      <button class="cab__boton etiqueta" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton>
+        Menú
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" data-menu inert>
+  <nav aria-label="Menú completo">
+    <ul class="menu__lista">
+      <li style="--i:0">
+        <a href="/" aria-current={actual === '/' ? 'page' : undefined}>
+          <span class="num">00</span>
+          <span>Inicio</span>
+        </a>
+      </li>
+      {
+        paginas.map((p, i) => (
+          <li style={`--i:${i + 1}`}>
+            <a href={p.ruta} aria-current={actual === p.ruta ? 'page' : undefined}>
+              <span class="num">{p.numero}</span>
+              <span>{p.nombre}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="menu__pie">
+    <a class="cta" href={sitio.cta.destino}>
+      {sitio.cta.texto}
+      <Flecha />
+    </a>
+    <span class="etiqueta tenue">{sitio.modalidades}</span>
+  </div>
+</div>

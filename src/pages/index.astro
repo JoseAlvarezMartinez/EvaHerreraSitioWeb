@@ -1,0 +1,483 @@
+---
+import Base from '../layouts/Base.astro';
+import Seccion from '../components/Seccion.astro';
+import Flecha from '../components/Flecha.astro';
+import Foto from '../components/Foto.astro';
+import { sitio } from '../data/sitio';
+import { sobre } from '../data/sobre';
+import { formacion } from '../data/formacion';
+import { experiencia } from '../data/experiencia';
+import { equipo } from '../data/equipo';
+import { lugares } from '../data/lugares';
+
+const dos = (n: number) => String(n).padStart(2, '0');
+
+// Resúmenes para la portada: lo más reciente de cada lista.
+const formacionDestacada = [...formacion.lineaDeTiempo].reverse().slice(0, 4);
+const trayectoriaDestacada = experiencia.trayectoria.slice(0, 4);
+const areas = experiencia.areas.filter((a) => !a.nombre.includes('COMPLETAR'));
+const tele = lugares.teleconsulta;
+---
+
+<Base>
+  <!-- ============ HERO ============ -->
+  <section class="hero marco" aria-label="Presentación">
+    <div class="hero__texto">
+      <p class="hero__sobre etiqueta" data-aparece>{sitio.especialidad} · {sitio.pais}</p>
+      <h1 class="hero__nombre titulo-xl" aria-label={`${sitio.tratamiento} ${sitio.nombreCompleto}`}>
+        <span class="renglon" style="--i:0" aria-hidden="true">
+          <span class="renglon__in">{sitio.tratamiento} {sitio.nombreEnLineas[0]}</span>
+        </span>
+        <span class="renglon" style="--i:1" aria-hidden="true">
+          <span class="renglon__in">{sitio.nombreEnLineas.slice(1).join(' ')}</span>
+        </span>
+      </h1>
+      <p class="hero__bajada bajada" data-aparece style="--i:3">{sitio.bajada}</p>
+      <div class="hero__acciones" data-aparece style="--i:4">
+        <a class="cta" href={sitio.cta.destino}>
+          {sitio.cta.texto}
+          <Flecha />
+        </a>
+        <a class="cta cta--linea" href="/donde-atiende/">Dónde atiende</a>
+      </div>
+      <p class="hero__ficha chico tenue" data-aparece style="--i:5">
+        {sitio.fichaPortada.map((d) => d.valor).join(' · ')}
+      </p>
+    </div>
+
+    <figure class="hero__visual">
+      <div class="hero__foto" data-aparece="cortina" style="--i:2">
+        <Foto
+          archivo={sobre.foto}
+          alt={`Retrato de la ${sitio.tratamiento} ${sitio.nombreCompleto}`}
+          iniciales={sobre.iniciales}
+          tono={1}
+          anchos={[400, 700, 1000]}
+          sizes="(min-width: 900px) 34vw, 80vw"
+          prioridad
+        />
+      </div>
+      <span class="chip hero__chip hero__chip--1" data-aparece style="--i:6">
+        <span class="latido" aria-hidden="true"></span>
+        {sitio.modalidades}
+      </span>
+      <span class="chip hero__chip hero__chip--2" data-aparece style="--i:7">{sitio.matriculas[0]}</span>
+    </figure>
+  </section>
+
+  <!-- ============ SOBRE MÍ ============ -->
+  <Seccion numero="01" titulo="Sobre mí" id="sobre" suave encabezado={sobre.presentacion}>
+    <div class="sobre">
+      {
+        sobre.bio.slice(0, 2).map((parrafo, i) => (
+          <p class="texto" data-aparece style={`--i:${i}`}>
+            {parrafo}
+          </p>
+        ))
+      }
+    </div>
+    <p class="mas" data-aparece>
+      <a class="cta cta--linea" href="/sobre-mi/">
+        Conocer más
+        <Flecha />
+      </a>
+    </p>
+  </Seccion>
+
+  <!-- ============ FORMACIÓN Y TRAYECTORIA ============ -->
+  <Seccion
+    numero="02"
+    titulo="Formación y trayectoria"
+    id="recorrido"
+    encabezado="Años de formación y de quirófano."
+    intro={formacion.intro}
+  >
+    <div class="recorrido">
+      <article class="tarjeta" data-aparece>
+        <h3 class="titulo-m">Formación</h3>
+        <ol class="recorrido__lista">
+          {
+            formacionDestacada.map((h) => (
+              <li>
+                <span class="recorrido__cuando">{h.anio}</span>
+                <span>
+                  <span class="recorrido__que">{h.titulo}</span>
+                  <span class="recorrido__donde chico tenue">{h.institucion}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+        <a class="enlace enlace--flecha recorrido__mas" href="/formacion/">
+          Formación completa
+          <Flecha />
+        </a>
+      </article>
+
+      <article class="tarjeta" data-aparece style="--i:1">
+        <h3 class="titulo-m">Trayectoria</h3>
+        <ol class="recorrido__lista">
+          {
+            trayectoriaDestacada.map((t) => (
+              <li>
+                <span class="recorrido__cuando">{t.periodo}</span>
+                <span>
+                  <span class="recorrido__que">{t.cargo}</span>
+                  <span class="recorrido__donde chico tenue">{t.institucion}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+        <a class="enlace enlace--flecha recorrido__mas" href="/experiencia/">
+          Experiencia completa
+          <Flecha />
+        </a>
+      </article>
+    </div>
+  </Seccion>
+
+  <!-- ============ ÁREAS DE PRÁCTICA ============ -->
+  <Seccion
+    numero="03"
+    titulo="Áreas de práctica"
+    id="areas"
+    suave
+    encabezado="En qué puedo ayudarte."
+    intro="La indicación de una cirugía se define siempre en la consulta, después de escucharte y revisarte."
+  >
+    <ul class="areas">
+      {
+        areas.map((a, i) => (
+          <li class="tarjeta" data-aparece style={`--i:${i % 3}`}>
+            <span class="num">{dos(i + 1)}</span>
+            <h3 class="titulo-s">{a.nombre}</h3>
+            <p class="chico tenue">{a.descripcion}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mas" data-aparece>
+      <a class="cta cta--linea" href="/experiencia/#procedimientos">
+        Ver procedimientos
+        <Flecha />
+      </a>
+    </p>
+  </Seccion>
+
+  <!-- ============ EQUIPO ============ -->
+  <Seccion numero="04" titulo="Equipo" id="equipo" encabezado="Las personas que te acompañan." intro={equipo.intro}>
+    <ul class="plantel">
+      {
+        equipo.integrantes.map((m, i) => (
+          <li class="plantel__persona" data-aparece style={`--i:${i % 3}`}>
+            <span class="plantel__iniciales" aria-hidden="true">{m.iniciales}</span>
+            <span>
+              <span class="plantel__nombre">{m.nombre}</span>
+              <span class="chico tenue plantel__rol">{m.rol}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mas" data-aparece>
+      <a class="cta cta--linea" href="/equipo/">
+        Conocer al equipo
+        <Flecha />
+      </a>
+    </p>
+  </Seccion>
+
+  <!-- ============ DÓNDE ATIENDE ============ -->
+  <Seccion
+    numero="05"
+    titulo="Dónde atiende"
+    id="atencion"
+    suave
+    encabezado="Elegí cómo preferís atenderte."
+    intro={lugares.intro}
+  >
+    <div class="lugares">
+      {
+        lugares.consultorios.map((l, i) => (
+          <article class="tarjeta lugar" data-aparece style={`--i:${i}`}>
+            <p class="etiqueta tenue">{l.tipo}</p>
+            <h3 class="titulo-m">{l.nombre}</h3>
+            <dl class="lugar__datos">
+              <div>
+                <dt>Dirección</dt>
+                <dd>{l.direccion}</dd>
+              </div>
+              <div>
+                <dt>Días</dt>
+                <dd>{l.dias}</dd>
+              </div>
+              <div>
+                <dt>Horarios</dt>
+                <dd>{l.horarios}</dd>
+              </div>
+            </dl>
+            <a class="enlace enlace--flecha lugar__mas" href="/donde-atiende/">
+              Coberturas y cómo llegar
+              <Flecha />
+            </a>
+          </article>
+        ))
+      }
+      <article class="tarjeta tarjeta--oscura lugar" data-aparece style={`--i:${lugares.consultorios.length}`}>
+        <p class="etiqueta tenue">A distancia</p>
+        <h3 class="titulo-m">{tele.titulo}</h3>
+        <dl class="lugar__datos">
+          {
+            tele.datos.slice(0, 3).map((d) => (
+              <div>
+                <dt>{d.etiqueta}</dt>
+                <dd>{d.valor}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="enlace enlace--flecha lugar__mas" href="/donde-atiende/#teleconsulta">
+          Cómo funciona
+          <Flecha />
+        </a>
+      </article>
+    </div>
+  </Seccion>
+</Base>
+
+<style>
+  /* ================= HERO ================= */
+  .hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    padding-block: clamp(2.5rem, 6vw, 5.5rem) var(--aire);
+  }
+
+  .hero__texto {
+    flex: 1 1 440px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(1.1rem, 2vw, 1.6rem);
+  }
+
+  .hero__sobre {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    color: var(--tinta-2);
+  }
+
+  .hero__sobre::before {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--acento);
+  }
+
+  .hero__nombre {
+    font-weight: 300;
+  }
+
+  .hero__bajada {
+    max-width: 31em;
+  }
+
+  .hero__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.4rem;
+  }
+
+  .hero__visual {
+    position: relative;
+    flex: 0 1 400px;
+    min-width: 0;
+    margin-inline: auto;
+  }
+
+  .hero__chip {
+    position: absolute;
+    box-shadow: 0 14px 30px -18px rgba(23, 20, 15, 0.45);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .hero__chip--1 {
+    top: 9%;
+    right: -6%;
+  }
+
+  .hero__chip--2 {
+    bottom: -1rem;
+    left: -8%;
+  }
+
+  @media (max-width: 899px) {
+    .hero__visual {
+      flex-basis: 320px;
+    }
+
+    .hero__chip--1 {
+      right: -3%;
+    }
+
+    .hero__chip--2 {
+      left: -3%;
+    }
+  }
+
+  /* ================= Común ================= */
+  .mas {
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  /* ================= SOBRE MÍ ================= */
+  .sobre {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem var(--canal);
+    max-width: 62rem;
+  }
+
+  .sobre .texto + .texto {
+    margin-top: 0;
+  }
+
+  /* ================= FORMACIÓN Y TRAYECTORIA ================= */
+  .recorrido {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--canal);
+  }
+
+  .recorrido__lista {
+    margin-top: 0.5rem;
+  }
+
+  .recorrido__lista li {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    column-gap: 1rem;
+    align-items: baseline;
+    padding-block: 0.9rem;
+    border-top: 1px solid var(--linea-suave);
+  }
+
+  .recorrido__cuando {
+    font-size: 0.8125rem;
+    color: var(--acento);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .recorrido__que,
+  .recorrido__donde {
+    display: block;
+  }
+
+  .recorrido__mas {
+    align-self: flex-start;
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  /* ================= ÁREAS ================= */
+  .areas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--canal);
+  }
+
+  /* ================= EQUIPO ================= */
+  .plantel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem var(--canal);
+  }
+
+  .plantel__persona {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--linea);
+  }
+
+  .plantel__iniciales {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--papel);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .plantel__nombre,
+  .plantel__rol {
+    display: block;
+  }
+
+  /* ================= DÓNDE ATIENDE ================= */
+  .lugares {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--canal);
+  }
+
+  .lugar__datos {
+    margin-top: 0.5rem;
+  }
+
+  .lugar__datos div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.8rem;
+    border-top: 1px solid var(--linea);
+    font-size: 0.9375rem;
+  }
+
+  .lugar__datos dt {
+    color: var(--tinta-2);
+  }
+
+  .lugar__datos dd {
+    text-align: right;
+  }
+
+  .lugar__mas {
+    align-self: flex-start;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  @media (max-width: 899px) {
+    .areas,
+    .plantel,
+    .lugares {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 699px) {
+    .sobre,
+    .recorrido,
+    .areas,
+    .plantel,
+    .lugares {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

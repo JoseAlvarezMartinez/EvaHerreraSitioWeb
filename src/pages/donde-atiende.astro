@@ -1,0 +1,252 @@
+---
+import Base from '../layouts/Base.astro';
+import Folio from '../components/Folio.astro';
+import Mapa from '../components/Mapa.astro';
+import Flecha from '../components/Flecha.astro';
+import { sitio, pagina } from '../data/sitio';
+import { lugares } from '../data/lugares';
+import { enlaceMapa } from '../lib/enlaces';
+
+const p = pagina('lugares');
+const tele = lugares.teleconsulta;
+const dos = (n: number) => String(n).padStart(2, '0');
+---
+
+<Base titulo={p.nombre} descripcion={p.descripcion} actual="lugares">
+  <Folio numero={p.numero} nombre={p.nombre} titulo={p.titulo} enfasis={p.enfasis} intro={lugares.intro} />
+
+  <div class="directorio">
+    {
+      lugares.consultorios.map((l, i) => (
+        <article class="ficha" aria-labelledby={`lugar-${i}`} data-linea="fuerte">
+          <div class="marco grilla">
+            <header class="ficha__cab">
+              <p class="ficha__meta" data-aparece>
+                <span class="num">{p.numero}.{i + 1}</span>
+                <span class="etiqueta tenue">{l.tipo}</span>
+              </p>
+              <h2 class="titulo-l" id={`lugar-${i}`} data-palabras>
+                {l.nombre}
+              </h2>
+            </header>
+
+            <dl class="datos ficha__datos" data-aparece style="--i:1">
+              <div>
+                <dt class="etiqueta">Dirección</dt>
+                <dd>
+                  {l.direccion}
+                  <br />
+                  <span class="tenue">{l.localidad}</span>
+                </dd>
+              </div>
+              <div>
+                <dt class="etiqueta">Días</dt>
+                <dd>{l.dias}</dd>
+              </div>
+              <div>
+                <dt class="etiqueta">Horarios</dt>
+                <dd>{l.horarios}</dd>
+              </div>
+              <div>
+                <dt class="etiqueta">Turnos</dt>
+                <dd>{l.turnos}</dd>
+              </div>
+              <div>
+                <dt class="etiqueta">Coberturas</dt>
+                <dd>
+                  <ul class="ficha__coberturas">
+                    {l.obrasSociales.map((o) => <li>{o}</li>)}
+                  </ul>
+                </dd>
+              </div>
+              {l.nota && (
+                <div>
+                  <dt class="etiqueta">Notas</dt>
+                  <dd class="tenue chico">{l.nota}</dd>
+                </div>
+              )}
+            </dl>
+
+            <div class="ficha__mapa">
+              <div data-aparece="cortina">
+                <Mapa lat={l.lat} lng={l.lng} titulo={`Mapa de ${l.nombre}`} />
+              </div>
+              <p class="ficha__mapa-pie" data-aparece style="--i:3">
+                <a
+                  class="enlace enlace--linea enlace--flecha etiqueta"
+                  href={enlaceMapa(l.lat, l.lng)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Cómo llegar
+                  <Flecha diagonal />
+                </a>
+                <span class="etiqueta tenue">© OpenStreetMap</span>
+              </p>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <section class="tele" id="teleconsulta" aria-labelledby="tele-titulo" data-linea="fuerte">
+    <div class="marco grilla">
+      <header class="tele__cab">
+        <p class="ficha__meta" data-aparece>
+          <span class="num">{p.numero}.{lugares.consultorios.length + 1}</span>
+          <span class="etiqueta tenue">A distancia</span>
+        </p>
+        <h2 class="titulo-xl" id="tele-titulo" data-palabras><em>{tele.titulo}</em></h2>
+      </header>
+
+      <div class="tele__texto" data-aparece>
+        <p class="bajada">{tele.descripcion}</p>
+        <ol class="tele__pasos">
+          {
+            tele.pasos.map((paso, i) => (
+              <li>
+                <span class="num">{dos(i + 1)}</span>
+                <span>{paso}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="tele__lado" data-aparece style="--i:1">
+        <dl class="datos">
+          {
+            tele.datos.map((d) => (
+              <div>
+                <dt class="etiqueta">{d.etiqueta}</dt>
+                <dd>{d.valor}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="chico tenue tele__aviso">{tele.aviso}</p>
+        <a class="cta" href={sitio.cta.destino}>
+          Pedir teleconsulta
+          <Flecha />
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- Fichas de directorio ---------- */
+  .ficha {
+    padding-block: var(--aire-chico) var(--aire);
+    border-top: 1px solid var(--tinta);
+  }
+
+  .ficha .grilla {
+    row-gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  .ficha__cab {
+    grid-column: 1 / -1;
+  }
+
+  .ficha__meta {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.75rem);
+  }
+
+  .ficha__datos {
+    grid-column: 1 / 6;
+  }
+
+  .ficha__mapa {
+    grid-column: 7 / -1;
+  }
+
+  .ficha:nth-child(even) .ficha__datos {
+    grid-column: 8 / -1;
+    grid-row: 2;
+  }
+
+  .ficha:nth-child(even) .ficha__mapa {
+    grid-column: 1 / 7;
+    grid-row: 2;
+  }
+
+  .ficha__coberturas li + li {
+    margin-top: 0.2rem;
+  }
+
+  .ficha__mapa-pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+
+  @media (max-width: 899px) {
+    .ficha__datos,
+    .ficha__mapa,
+    .ficha:nth-child(even) .ficha__datos,
+    .ficha:nth-child(even) .ficha__mapa {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+  }
+
+  /* ---------- Teleconsulta ---------- */
+  .tele {
+    padding-block: var(--aire-chico) var(--aire);
+    background: var(--papel);
+    border-top: 1px solid var(--tinta);
+  }
+
+  .tele .grilla {
+    row-gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .tele__cab {
+    grid-column: 1 / -1;
+  }
+
+  .tele__texto {
+    grid-column: 1 / 7;
+  }
+
+  .tele__pasos {
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .tele__pasos li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    align-items: baseline;
+    padding-block: 1rem;
+    border-top: 1px solid var(--linea);
+  }
+
+  .tele__pasos li:last-child {
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .tele__lado {
+    grid-column: 8 / -1;
+  }
+
+  .tele__aviso {
+    margin-block: 1.5rem 2rem;
+    max-width: 32em;
+  }
+
+  @media (max-width: 899px) {
+    .tele__texto,
+    .tele__lado {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

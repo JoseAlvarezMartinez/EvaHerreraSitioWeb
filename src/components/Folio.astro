@@ -1,0 +1,39 @@
+---
+/* Encabezado de página: número, nombre de sección, título enorme y bajada. */
+interface Props {
+  numero: string;
+  nombre: string;
+  titulo: string;
+  enfasis?: string;
+  intro?: string;
+}
+const { numero, nombre, titulo, enfasis = '', intro } = Astro.props;
+---
+
+<header class="folio marco">
+  <p class="folio__meta" data-aparece>
+    <span class="num">{numero}</span>
+    <span class="etiqueta">{nombre}</span>
+  </p>
+  <h1 class="folio__titulo titulo-xl">
+    <span class="renglon" style="--i:0"><span class="renglon__in">{titulo}</span></span>
+    {
+      enfasis && (
+        <span class="renglon renglon--2" style="--i:1">
+          <span class="renglon__in">
+            <em>{enfasis}</em>
+          </span>
+        </span>
+      )
+    }
+  </h1>
+  {
+    intro && (
+      <div class="folio__pie grilla" data-linea>
+        <p class="folio__intro bajada" data-aparece style="--i:2">
+          {intro}
+        </p>
+      </div>
+    )
+  }
+</header>
