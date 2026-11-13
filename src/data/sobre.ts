@@ -50,7 +50,7 @@ export const sobre = {
   // Ficha breve al costado de la biografía.
   ficha: [
     { etiqueta: 'Especialidad', valor: 'Cirugía general' },
-    { etiqueta: 'Matrícula', valor: 'M.N. [COMPLETAR] · M.P. [COMPLETAR]' },
+    { etiqueta: 'Matrícula', valor: 'M.N. 174677 · M.P. [COMPLETAR]' },
     { etiqueta: 'Atención', valor: 'Consultorio y teleconsulta' },
     { etiqueta: 'Idiomas', valor: 'Español, [COMPLETAR]' },
   ],

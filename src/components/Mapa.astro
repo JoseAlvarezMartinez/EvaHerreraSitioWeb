@@ -13,6 +13,7 @@ const src = `https://www.openstreetmap.org/export/embed.html?bbox=${caja}&layer=
 
 <div class="mapa">
   <iframe src={src} title={titulo} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <span class="mapa__pulso" aria-hidden="true"></span>
 </div>
 
 <style>
@@ -32,5 +33,52 @@ const src = `https://www.openstreetmap.org/export/embed.html?bbox=${caja}&layer=
     border: 0;
     filter: grayscale(1) contrast(1.15) brightness(1.04);
     mix-blend-mode: multiply;
+  }
+
+  /* El consultorio late sobre el mapa. */
+  .mapa__pulso {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 50%;
+    background: var(--acento);
+    box-shadow: 0 0 0 3px rgba(255, 253, 249, 0.9);
+    pointer-events: none;
+  }
+
+  .mapa__pulso::before,
+  .mapa__pulso::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--acento);
+    opacity: 0;
+  }
+
+  @keyframes mapa-onda {
+    0% {
+      scale: 1;
+      opacity: 0.85;
+    }
+
+    100% {
+      scale: 6;
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mapa__pulso::before,
+    .mapa__pulso::after {
+      animation: mapa-onda 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+    }
+
+    .mapa__pulso::after {
+      animation-delay: 1.2s;
+    }
   }
 </style>

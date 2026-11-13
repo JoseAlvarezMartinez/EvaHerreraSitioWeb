@@ -20,11 +20,14 @@ export const sitio = {
   ],
 
   especialidad: 'Cirujana general',
-  pais: 'Argentina',
+
+  // Rótulos que siguen a la especialidad encima del nombre, en la portada.
+  // Cada uno va separado por una rayita de acento.
+  rotulosPortada: ['F1 Endoscopia', 'Gastroenterología'],
   modalidades: 'Consultorio y teleconsulta',
 
   // Matrículas. Se muestran en el pie y en "Sobre mí".
-  matriculas: ['M.N. [COMPLETAR]', 'M.P. [COMPLETAR]'],
+  matriculas: ['M.N. 174677', 'M.P. [COMPLETAR]'],
 
   // Descripción corta para buscadores y para compartir en redes.
   descripcion:

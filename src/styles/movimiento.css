@@ -1,0 +1,279 @@
+/* ==================================================================
+   MOVIMIENTO
+   Capa de animaciones compartidas por todo el sitio. El motivo es uno
+   solo: el pulso. Todo lo que se mueve responde al scroll o al cursor.
+   Los efectos que siguen al cursor los alimenta src/scripts/movimiento.ts.
+=================================================================== */
+
+/* Los anillos y resplandores pueden asomar fuera del contenido. */
+main {
+  overflow-x: clip;
+}
+
+/* ---------- Franja de pulso ---------- */
+
+.pulso-franja {
+  height: 80px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pulso-franja svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pulso-franja path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pulso-franja__base {
+  stroke: var(--acento);
+  stroke-width: 1.25;
+  opacity: 0.45;
+}
+
+.pulso-franja__barrido {
+  display: none;
+  stroke: var(--acento);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 5px rgba(168, 69, 42, 0.7));
+}
+
+@keyframes pulso-barrido {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulso-enciende {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Luz que sigue al cursor en las tarjetas ---------- */
+
+.tarjeta,
+.pie__llamado {
+  --mx: 50%;
+  --my: 0%;
+  isolation: isolate;
+}
+
+.tarjeta {
+  position: relative;
+}
+
+.tarjeta::before,
+.pie__llamado::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(26rem circle at var(--mx) var(--my), rgba(168, 69, 42, 0.12), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.tarjeta--oscura::before,
+.pie__llamado::before {
+  background: radial-gradient(30rem circle at var(--mx) var(--my), rgba(217, 138, 108, 0.24), transparent 62%);
+}
+
+.tarjeta:hover::before,
+.pie__llamado:hover::before {
+  opacity: 1;
+}
+
+/* ---------- Botones con imán ---------- */
+
+.cta,
+.cab__turno {
+  translate: var(--ix, 0px) var(--iy, 0px);
+  transition:
+    background-color var(--hover),
+    color var(--hover),
+    border-color var(--hover),
+    transform var(--hover),
+    box-shadow var(--hover),
+    translate 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---------- Filas que responden al cursor ---------- */
+
+.fila-viva,
+.js .fila-viva[data-aparece] {
+  position: relative;
+  padding-inline: 1.25rem;
+  transition:
+    opacity 0.65s var(--curva) calc(var(--i, 0) * 70ms),
+    transform 0.65s var(--curva) calc(var(--i, 0) * 70ms),
+    background-color 0.6s ease,
+    padding-left 0.6s var(--curva);
+}
+
+/* Barra de acento que baja por el borde izquierdo. */
+.fila-viva::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--acento);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.6s var(--curva);
+}
+
+.fila-viva:hover,
+.fila-viva:focus-visible {
+  padding-left: 2rem;
+  background: rgba(255, 253, 249, 0.72);
+}
+
+.fila-viva:hover::after,
+.fila-viva:focus-visible::after {
+  transform: scaleY(1);
+}
+
+@media (max-width: 699px) {
+  .fila-viva,
+  .js .fila-viva[data-aparece] {
+    padding-inline: 0.75rem;
+  }
+
+  .fila-viva:hover,
+  .fila-viva:focus-visible {
+    padding-left: 1.25rem;
+  }
+}
+
+/* ---------- 404: el cero late ---------- */
+
+@keyframes latido-suave {
+  0%,
+  36%,
+  100% {
+    scale: 1;
+  }
+
+  10% {
+    scale: 1.09;
+  }
+
+  20% {
+    scale: 1;
+  }
+
+  28% {
+    scale: 1.05;
+  }
+}
+
+/* ---------- Todo lo que depende de que haya movimiento ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Franja de pulso: se traza y después la recorre el destello. */
+  .js .pulso-franja__base {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 2.6s cubic-bezier(0.45, 0, 0.2, 1) 0.15s;
+  }
+
+  .js .pulso-franja.visible .pulso-franja__base {
+    stroke-dashoffset: 0;
+  }
+
+  html.intro .pulso-franja__base {
+    transition-delay: 2.1s;
+  }
+
+  .js .pulso-franja.visible .pulso-franja__barrido {
+    display: block;
+    stroke-dasharray: 0.03 0.97;
+    animation:
+      pulso-barrido 7s linear 2.4s infinite,
+      pulso-enciende 0.6s ease 2.4s both;
+  }
+
+  /* La rayita de acento de cada rótulo se dibuja al aparecer. */
+  .js [data-aparece].seccion__cab::before,
+  .js [data-aparece].folio__meta::before,
+  .js [data-aparece].hero__sobre .hero__rotulo::before {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1s var(--curva) calc(var(--i, 0) * 55ms + var(--n, 0) * 160ms + 0.3s);
+  }
+
+  .js [data-aparece].visible.seccion__cab::before,
+  .js [data-aparece].visible.folio__meta::before,
+  .js [data-aparece].visible.hero__sobre .hero__rotulo::before {
+    transform: none;
+  }
+
+  html.intro [data-aparece].folio__meta::before,
+  html.intro [data-aparece].hero__sobre .hero__rotulo::before {
+    transition-delay: calc(var(--n, 0) * 160ms + 2.3s);
+  }
+
+  /* Goteo: los ítems de una lista entran uno detrás del otro. */
+  .js [data-aparece] .goteo > * {
+    opacity: 0;
+    translate: -0.9rem 0;
+    transition:
+      opacity 0.6s var(--curva),
+      translate 0.6s var(--curva);
+    transition-delay: calc(var(--j, 0) * 75ms + var(--i, 0) * 55ms + 0.3s);
+  }
+
+  .js [data-aparece].visible .goteo > * {
+    opacity: 1;
+    translate: none;
+  }
+
+  /* Las filas vivas entran desde el costado. */
+  .js .fila-viva[data-aparece]:not(.visible) {
+    transform: translateX(-2rem);
+  }
+
+  /* La pestaña activa del menú se desliza de una página a la otra. */
+  .cab__nav a[aria-current='page'] {
+    view-transition-name: pestana;
+  }
+
+  .perdida__numero em {
+    display: inline-block;
+    animation: latido-suave 1.6s ease-in-out infinite;
+  }
+}
+
+::view-transition-group(pestana) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+@media print {
+  .pulso-franja,
+  .apertura {
+    display: none !important;
+  }
+
+  .js [data-aparece] .goteo > * {
+    opacity: 1;
+    translate: none;
+  }
+}

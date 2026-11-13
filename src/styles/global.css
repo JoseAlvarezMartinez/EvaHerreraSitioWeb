@@ -992,69 +992,167 @@ a:focus-visible > .flecha--diagonal {
   transform: none;
 }
 
-/* ---------- Telón de entrada (solo la primera visita de la sesión) ---------- */
+/* ---------- Apertura (solo la primera visita de la sesión) ----------
+   Un latido se traza en el centro, la línea se extiende como una incisión
+   y las dos hojas se abren para descubrir el sitio. */
 
-.telon {
+.apertura {
   display: none;
 }
 
-html.intro .telon {
+html.intro .apertura {
   position: fixed;
   inset: 0;
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  background: var(--tinta);
-  color: var(--marfil);
-  animation: telon-sale 1s cubic-bezier(0.7, 0, 0.2, 1) 1.35s forwards;
-}
-
-.telon__marca {
-  overflow: hidden;
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(1.75rem, 4.5vw, 3.5rem);
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-}
-
-.telon__marca span {
+  z-index: 300;
   display: block;
-  transform: translateY(110%);
-  animation: subir 0.9s var(--curva) 0.15s forwards;
+  color: #f3eee4;
 }
 
-.telon__linea {
-  width: min(14rem, 40vw);
-  height: 1px;
+.apertura__hoja {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.2%;
+  display: flex;
+  justify-content: center;
+  background: var(--tinta);
+  animation: apertura-abre 0.95s cubic-bezier(0.76, 0, 0.18, 1) 1.75s forwards;
+}
+
+.apertura__hoja--a {
+  --hacia: -101%;
+  top: 0;
+  align-items: flex-end;
+  padding-bottom: 4.5rem;
+}
+
+.apertura__hoja--b {
+  --hacia: 101%;
+  bottom: 0;
+  align-items: flex-start;
+  padding-top: 4.5rem;
+}
+
+.apertura__nombre {
+  overflow: hidden;
+  padding-inline: 1.5rem;
+  font-weight: 300;
+  font-size: clamp(1.75rem, 4.2vw, 3.25rem);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.apertura__nombre span {
+  display: block;
+  transform: translateY(115%);
+  animation: subir 0.9s var(--curva) 0.45s forwards;
+}
+
+.apertura__rol {
+  color: rgba(243, 238, 228, 0.66);
+  opacity: 0;
+  animation: apertura-aparece 0.8s ease 0.85s forwards;
+}
+
+.apertura__corte {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 120px;
+  margin-top: -60px;
+  display: flex;
+  align-items: center;
+  animation: apertura-fuera 0.35s ease 1.65s forwards;
+}
+
+.apertura__linea {
+  flex: 1;
+  height: 1.5px;
   background: #d98a6c;
   transform: scaleX(0);
-  transform-origin: left center;
-  animation: telon-linea 1s var(--curva) 0.3s forwards;
+  animation: apertura-linea 0.8s var(--curva) 0.6s forwards;
 }
 
-@keyframes telon-linea {
+.apertura__linea--izq {
+  transform-origin: right center;
+}
+
+.apertura__linea--der {
+  transform-origin: left center;
+}
+
+.apertura__pico {
+  flex: none;
+  overflow: visible;
+  stroke: #d98a6c;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px rgba(217, 138, 108, 0.55));
+}
+
+.apertura__pico path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: apertura-traza 0.75s cubic-bezier(0.5, 0, 0.3, 1) 0.1s forwards;
+}
+
+@keyframes apertura-traza {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes apertura-linea {
   to {
     transform: scaleX(1);
   }
 }
 
-@keyframes telon-sale {
+@keyframes apertura-aparece {
   to {
-    transform: translateY(-100%);
+    opacity: 1;
   }
 }
 
+@keyframes apertura-fuera {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes apertura-abre {
+  to {
+    transform: translateY(var(--hacia));
+  }
+}
+
+/* Mientras dura la apertura, el contenido espera detrás. */
 html.intro {
-  --espera: 1.75s;
+  --espera: 1.95s;
 }
 
 html.intro [data-aparece],
 html.intro [data-linea]::before {
-  transition-delay: calc(var(--i, 0) * 80ms + 1.9s);
+  transition-delay: calc(var(--i, 0) * 80ms + 2.05s);
+}
+
+/* Si la persona hace clic, escribe o hace scroll, la apertura se retira ya. */
+html.intro-salta {
+  --espera: 0s;
+}
+
+html.intro-salta .apertura {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+html.intro-salta [data-aparece],
+html.intro-salta [data-aparece] *,
+html.intro-salta [data-linea]::before {
+  transition: none !important;
 }
 
 /* ---------- Transición entre páginas: la nueva sube como una hoja ---------- */
@@ -1183,7 +1281,7 @@ html.intro [data-linea]::before {
     transform: none;
   }
 
-  html.intro .telon {
+  html.intro .apertura {
     display: none;
   }
 }

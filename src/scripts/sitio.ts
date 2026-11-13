@@ -1,7 +1,9 @@
 /* Comportamiento del sitio. Se vuelve a ejecutar en cada cambio de página. */
 
+import { movimiento } from './movimiento';
+
 let observadorApariciones: IntersectionObserver | undefined;
-let observadorTiempo: IntersectionObserver | undefined;
+let escuchaTiempo: (() => void) | undefined;
 let fijarMenu: ((abierto: boolean) => void) | undefined;
 let menuAbierto = false;
 let ultimoScroll = 0;
@@ -76,7 +78,7 @@ function partirEnPalabras() {
 /* ---------- Apariciones al hacer scroll ---------- */
 function apariciones() {
   observadorApariciones?.disconnect();
-  const elementos = document.querySelectorAll<HTMLElement>('[data-aparece], [data-linea], [data-palabras]');
+  const elementos = document.querySelectorAll<HTMLElement>('[data-aparece], [data-linea], [data-palabras], [data-pulso]');
   if (!('IntersectionObserver' in window)) {
     elementos.forEach((el) => el.classList.add('visible'));
     return;
@@ -100,21 +102,44 @@ function apariciones() {
   });
 }
 
-/* ---------- Línea de tiempo: marca el hito que cruza el centro de la pantalla ---------- */
+/* ---------- Línea de tiempo: el pulso baja con el scroll y enciende cada hito ----------
+   El hito activo es el último cuyo nodo ya cruzó el centro de la pantalla (el primero,
+   mientras no se haya empezado a bajar). Los anteriores quedan como recorridos. */
 function lineaDeTiempo() {
-  observadorTiempo?.disconnect();
-  const items = document.querySelectorAll<HTMLElement>('[data-hito]');
-  if (!items.length || !('IntersectionObserver' in window)) return;
-  observadorTiempo = new IntersectionObserver(
-    (entradas) => {
-      for (const entrada of entradas) entrada.target.classList.toggle('activo', entrada.isIntersecting);
-      // Los hitos que ya quedaron arriba del centro se marcan como recorridos.
-      const centro = window.innerHeight / 2;
-      items.forEach((el) => el.classList.toggle('recorrido', el.getBoundingClientRect().top < centro));
-    },
-    { rootMargin: '-49.5% 0px -49.5% 0px', threshold: 0 },
-  );
-  items.forEach((el) => observadorTiempo!.observe(el));
+  if (escuchaTiempo) {
+    window.removeEventListener('scroll', escuchaTiempo);
+    window.removeEventListener('resize', escuchaTiempo);
+    escuchaTiempo = undefined;
+  }
+  const lista = document.querySelector<HTMLElement>('[data-tiempo]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-hito]')];
+  if (!lista || !items.length) return;
+  const nodos = items.map((el) => el.querySelector<HTMLElement>('[data-nodo]') ?? el);
+
+  let pendiente = false;
+  const medir = () => {
+    pendiente = false;
+    const centro = window.innerHeight / 2;
+    let ultimo = 0;
+    nodos.forEach((nodo, i) => {
+      const caja = nodo.getBoundingClientRect();
+      const pasado = caja.top + caja.height / 2 <= centro;
+      items[i].classList.toggle('recorrido', pasado);
+      if (pasado) ultimo = i;
+    });
+    const enCurso = lista.getBoundingClientRect().bottom > centro;
+    items.forEach((el, i) => el.classList.toggle('activo', enCurso && i === ultimo));
+    lista.classList.toggle('completa', !enCurso);
+  };
+
+  escuchaTiempo = () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(medir);
+  };
+  window.addEventListener('scroll', escuchaTiempo, { passive: true });
+  window.addEventListener('resize', escuchaTiempo);
+  medir();
 }
 
 /* ---------- Índice de la portada: el panel sigue al ítem señalado ---------- */
@@ -193,11 +218,31 @@ function formulario() {
   });
 }
 
-/* ---------- Telón de entrada: se retira la marca cuando termina ---------- */
-function telon() {
+/* ---------- Apertura: se retira sola al terminar, o antes si la persona interactúa ---------- */
+function apertura() {
   const raiz = document.documentElement;
   if (!raiz.classList.contains('intro')) return;
-  window.setTimeout(() => raiz.classList.remove('intro'), 2600);
+  const gestos = ['pointerdown', 'keydown', 'wheel', 'touchmove'] as const;
+  let hecho = false;
+  const cerrar = (rapido: boolean) => {
+    if (hecho) return;
+    hecho = true;
+    window.clearTimeout(fin);
+    gestos.forEach((g) => window.removeEventListener(g, saltar));
+    if (!rapido) {
+      raiz.classList.remove('intro');
+      return;
+    }
+    raiz.classList.add('intro-salta');
+    window.setTimeout(() => raiz.classList.remove('intro', 'intro-salta'), 450);
+  };
+  const saltar = () => cerrar(true);
+  // Termina cuando las hojas acaban de abrirse; el reloj es solo una red de seguridad.
+  const fin = window.setTimeout(() => cerrar(false), 6000);
+  document.querySelector('.apertura')?.addEventListener('animationend', (e) => {
+    if ((e as AnimationEvent).animationName === 'apertura-abre') cerrar(false);
+  });
+  gestos.forEach((g) => window.addEventListener(g, saltar, { passive: true }));
 }
 
 let escuchaGlobal = false;
@@ -211,7 +256,8 @@ document.addEventListener('astro:page-load', () => {
   lineaDeTiempo();
   indice();
   formulario();
-  telon();
+  apertura();
+  movimiento();
 
   if (!escuchaGlobal) {
     window.addEventListener('scroll', cabecera, { passive: true });

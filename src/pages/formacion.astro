@@ -6,6 +6,8 @@ import { pagina } from '../data/sitio';
 import { formacion } from '../data/formacion';
 
 const p = pagina('formacion');
+/* Los años se parten en dígitos para que entren rodando, uno detrás del otro. */
+const digitos = (texto: string) => [...texto];
 ---
 
 <Base titulo={p.nombre} descripcion={p.descripcion} actual="formacion">
@@ -13,34 +15,55 @@ const p = pagina('formacion');
 
   <section class="tiempo" aria-label="Línea de tiempo">
     <div class="marco">
-      <ol class="tiempo__lista">
-        {
-          formacion.lineaDeTiempo.map((h) => (
-            <li class="hito" data-hito>
-              <p class="hito__anio" data-aparece>
-                <span class="hito__desde">{h.anio}</span>
-                {h.hasta && <span class="hito__hasta etiqueta">hasta {h.hasta}</span>}
-              </p>
-              <span class="hito__nodo" aria-hidden="true" />
-              <div class="hito__cuerpo" data-aparece style="--i:1">
-                <p class="etiqueta tenue">{h.tipo}</p>
-                <h2 class="titulo-m">{h.titulo}</h2>
-                <p class="hito__inst">{h.institucion}</p>
-                {h.detalle && <p class="texto chico tenue">{h.detalle}</p>}
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+      <div class="tiempo__via">
+        <ol class="tiempo__lista" data-tiempo>
+          {
+            formacion.lineaDeTiempo.map((h) => (
+              <li class="hito" data-hito>
+                <p class="hito__anio" data-aparece>
+                  <span class="hito__desde">
+                    <span class="solo-lectores">{h.anio}</span>
+                    <span class="rodillo" aria-hidden="true">
+                      {digitos(h.anio).map((d, n) => (
+                        <span class="rodillo__d" style={`--d:${n}`}>
+                          <span>{d}</span>
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+                  {h.hasta && <span class="hito__hasta etiqueta">hasta {h.hasta}</span>}
+                </p>
+                <span class="hito__nodo" data-nodo aria-hidden="true" />
+                <div class="hito__cuerpo tarjeta" data-aparece style="--i:1">
+                  <p class="hito__tipo etiqueta">{h.tipo}</p>
+                  <h2 class="titulo-m">{h.titulo}</h2>
+                  <p class="hito__inst">{h.institucion}</p>
+                  {h.detalle && <p class="texto chico tenue">{h.detalle}</p>}
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="tiempo__hoy etiqueta" data-aparece>Hoy</p>
+      </div>
     </div>
   </section>
 
-  <Seccion numero={`${p.numero}.1`} titulo="Cursos y actualizaciones" id="cursos">
+  <Seccion numero={`${p.numero}.1`} titulo="Cursos y actualizaciones" id="cursos" suave>
     <ul class="filas tabla">
       {
         formacion.cursos.map((c, i) => (
-          <li class="tabla__fila" data-aparece data-linea style={`--i:${i % 4}`}>
-            <span class="tabla__anio serif">{c.anio}</span>
+          <li class="tabla__fila" data-aparece data-linea style={`--i:${i % 5}`}>
+            <span class="tabla__anio serif">
+              <span class="solo-lectores">{c.anio}</span>
+              <span class="rodillo" aria-hidden="true">
+                {digitos(c.anio).map((d, n) => (
+                  <span class="rodillo__d" style={`--d:${n}`}>
+                    <span>{d}</span>
+                  </span>
+                ))}
+              </span>
+            </span>
             <span class="tabla__nombre titulo-s">{c.nombre}</span>
             <span class="tabla__inst tenue chico">{c.institucion}</span>
           </li>
@@ -50,13 +73,17 @@ const p = pagina('formacion');
   </Seccion>
 
   <Seccion numero={`${p.numero}.2`} titulo="Certificaciones" id="certificaciones">
-    <ul class="filas tabla">
+    <ul class="certs">
       {
         formacion.certificaciones.map((c, i) => (
-          <li class="tabla__fila" data-aparece data-linea style={`--i:${i % 4}`}>
-            <span class="tabla__anio etiqueta tenue">Vigencia {c.vigencia}</span>
-            <span class="tabla__nombre titulo-s">{c.nombre}</span>
-            <span class="tabla__inst tenue chico">{c.entidad}</span>
+          <li class="cert tarjeta" data-aparece style={`--i:${i % 3}`}>
+            <svg class="cert__sello" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" pathLength="1" />
+              <path d="M15 24.5l6.2 6.2L33.5 18" pathLength="1" />
+            </svg>
+            <h3 class="titulo-s">{c.nombre}</h3>
+            <p class="tenue chico">{c.entidad}</p>
+            <p class="cert__vigencia chip">Vigencia {c.vigencia}</p>
           </li>
         ))
       }
@@ -67,7 +94,8 @@ const p = pagina('formacion');
     <ul class="sociedades">
       {
         formacion.sociedades.map((s, i) => (
-          <li class="titulo-m" data-palabras style={`--i:${i}`}>
+          <li class="sociedad" data-aparece style={`--i:${i * 2}`}>
+            <span class="sociedad__punto" aria-hidden="true" />
             {s}
           </li>
         ))
@@ -77,22 +105,34 @@ const p = pagina('formacion');
 </Base>
 
 <style>
-  /* ---------- Línea de tiempo ---------- */
+  /* ---------- Línea de tiempo ----------
+     Eje vertical con un pulso que baja con el scroll. Cada hito es una tarjeta
+     que entra desde el costado; el año entra rodando dígito por dígito. */
   .tiempo {
     padding-bottom: var(--aire);
+    overflow-x: clip;
+  }
+
+  .tiempo__via {
+    --pad: clamp(1.5rem, 2.6vw, 2.5rem);
+    --anio: clamp(2.75rem, 5vw, 4.5rem);
+    --sep: clamp(1.5rem, 4vw, 4rem);
+    /* Posición horizontal del eje y altura del nodo dentro de cada hito. */
+    --eje: calc((100% + var(--canal)) / 12 * 5 - var(--canal) / 2);
+    --nodo-y: calc(var(--pad) + 0.9rem + var(--anio) * 0.4);
   }
 
   .tiempo__lista {
     position: relative;
   }
 
-  /* Trazo de acento que avanza con el scroll hasta el centro de la pantalla. */
+  /* Trazo de acento: crece desde el primer nodo hasta el centro de la pantalla. */
   .tiempo__lista::after {
     content: '';
     position: absolute;
-    top: clamp(1.75rem, 3vw, 3rem);
+    top: var(--nodo-y);
     bottom: 0;
-    left: calc((100% + var(--canal)) / 12 * 5 - var(--canal) / 2);
+    left: var(--eje);
     width: 1px;
     background: var(--acento);
     transform: scaleY(0);
@@ -100,18 +140,67 @@ const p = pagina('formacion');
     pointer-events: none;
   }
 
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .tiempo__lista::after {
-        animation: crecer linear both;
-        animation-timeline: view(block 50% 50%);
-      }
+  /* El pulso: un punto que late en la punta del trazo. */
+  .tiempo__lista::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: var(--nodo-y);
+    left: var(--eje);
+    display: none;
+    width: 11px;
+    height: 11px;
+    margin: -5.5px 0 0 -5px;
+    border-radius: 50%;
+    background: var(--acento);
+    pointer-events: none;
+  }
+
+  @keyframes tiempo-baja {
+    to {
+      top: 100%;
     }
   }
 
-  .hito.recorrido .hito__nodo {
-    background: var(--acento);
-    border-color: var(--acento);
+  @keyframes tiempo-halo {
+    0% {
+      box-shadow:
+        0 0 0 0 rgba(168, 69, 42, 0.5),
+        0 0 0 0 rgba(168, 69, 42, 0.28);
+    }
+
+    70%,
+    100% {
+      box-shadow:
+        0 0 0 10px rgba(168, 69, 42, 0),
+        0 0 0 22px rgba(168, 69, 42, 0);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* La línea de tiempo se mide contra el centro de la pantalla. El trazo y el
+         pulso empiezan en el primer nodo, así la punta coincide siempre con el centro. */
+      .tiempo__lista {
+        view-timeline: --tiempo block;
+        view-timeline-inset: 50% 50%;
+      }
+
+      .tiempo__lista::after {
+        animation: crecer linear both;
+        animation-timeline: --tiempo;
+        animation-range: var(--nodo-y) 100%;
+      }
+
+      .tiempo__lista::before {
+        display: block;
+        animation:
+          tiempo-baja linear both,
+          tiempo-halo 1.6s ease-out infinite;
+        animation-timeline: --tiempo, auto;
+        animation-range: var(--nodo-y) 100%, normal;
+      }
+    }
   }
 
   .hito {
@@ -120,7 +209,7 @@ const p = pagina('formacion');
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--canal);
     align-items: start;
-    padding-block: clamp(1.75rem, 3vw, 3rem);
+    padding-block: var(--pad);
   }
 
   /* La línea vertical: un tramo por hito, así queda continua. */
@@ -129,49 +218,75 @@ const p = pagina('formacion');
     position: absolute;
     top: 0;
     bottom: 0;
-    left: calc((100% + var(--canal)) / 12 * 5 - var(--canal) / 2);
+    left: var(--eje);
     width: 1px;
     background: var(--linea);
   }
 
   .hito:first-child::before {
-    top: clamp(1.75rem, 3vw, 3rem);
+    top: var(--nodo-y);
   }
 
   .hito__nodo {
     position: absolute;
-    top: calc(clamp(1.75rem, 3vw, 3rem) + clamp(0.9rem, 1.8vw, 1.8rem));
-    left: calc((100% + var(--canal)) / 12 * 5 - var(--canal) / 2);
-    width: 9px;
-    height: 9px;
-    margin-left: -4px;
-    border: 1px solid var(--tinta);
+    top: var(--nodo-y);
+    left: var(--eje);
+    width: 11px;
+    height: 11px;
+    margin: -5.5px 0 0 -5px;
+    border: 1px solid var(--tinta-2);
     border-radius: 50%;
     background: var(--marfil);
     transition:
       background-color 0.5s ease,
       border-color 0.5s ease,
-      transform 0.5s var(--curva);
+      box-shadow 0.5s ease;
+  }
+
+  /* Conector entre el nodo y la tarjeta: se dibuja cuando la tarjeta entra. */
+  .hito__nodo::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 1px);
+    width: calc(var(--sep) - 7px);
+    height: 1px;
+    background: var(--linea);
+    transform-origin: left center;
+    transition:
+      transform 0.7s var(--curva) 0.25s,
+      background-color 0.5s ease;
+  }
+
+  /* Onda que se expande desde el nodo del hito activo. */
+  .hito__nodo::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border: 1px solid var(--acento);
+    border-radius: 50%;
+    opacity: 0;
   }
 
   .hito__anio {
     grid-column: 1 / 6;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    padding-right: clamp(1.5rem, 4vw, 4rem);
+    gap: 0.7rem;
+    padding-top: 0.9rem;
+    padding-right: var(--sep);
     text-align: right;
   }
 
   .hito__desde {
-    font-family: var(--serif);
     font-weight: 300;
-    font-optical-sizing: auto;
-    font-size: clamp(3rem, 6vw, 6rem);
+    font-size: var(--anio);
     line-height: 0.8;
     letter-spacing: -0.05em;
-    font-variant-numeric: lining-nums;
-    transition: color 0.6s ease;
+    font-variant-numeric: lining-nums tabular-nums;
+    /* Los años todavía no alcanzados quedan apagados. */
+    color: color-mix(in srgb, var(--tinta) 26%, var(--marfil));
+    transition: color 0.7s ease;
   }
 
   .hito__hasta {
@@ -179,61 +294,136 @@ const p = pagina('formacion');
   }
 
   .hito__cuerpo {
-    grid-column: 6 / 12;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    padding-left: clamp(1.5rem, 4vw, 4rem);
-    padding-top: clamp(0.2rem, 0.5vw, 0.6rem);
+    grid-column: 6 / -1;
+    margin-left: var(--sep);
+    gap: 0.7rem;
   }
 
   .hito__cuerpo h2 {
-    max-width: 16em;
+    max-width: 18em;
   }
 
   .hito__inst {
-    max-width: 30em;
+    max-width: 32em;
   }
 
-  .hito.activo .hito__desde {
+  .hito__tipo {
+    color: var(--tinta-2);
+    transition: color 0.6s ease;
+  }
+
+  /* --- Estados que marca el script --- */
+  .hito.recorrido .hito__desde {
+    color: var(--tinta);
+  }
+
+  .hito.recorrido .hito__nodo {
+    background: var(--acento);
+    border-color: var(--acento);
+  }
+
+  .hito.activo .hito__desde,
+  .hito.activo .hito__tipo {
     color: var(--acento);
   }
 
   .hito.activo .hito__nodo {
     background: var(--acento);
     border-color: var(--acento);
-    transform: scale(1.35);
+    box-shadow: 0 0 0 5px rgba(168, 69, 42, 0.14);
+  }
+
+  .hito.activo .hito__nodo::before {
+    background: var(--acento);
+  }
+
+  .hito.activo .hito__cuerpo {
+    translate: 0 -4px;
+    border-color: var(--tinta);
+    box-shadow: 0 34px 60px -34px rgba(23, 20, 15, 0.32);
+  }
+
+  /* Cierre de la línea: el pulso descansa en «Hoy». */
+  .tiempo__hoy {
+    width: max-content;
+    margin-left: var(--eje);
+    padding-top: 1.1rem;
+    translate: -50% 0;
+    color: var(--tinta-2);
+    transition-property: opacity, transform, color;
+  }
+
+  .tiempo__lista.completa + .tiempo__hoy {
+    color: var(--acento);
+  }
+
+  /* --- Años que ruedan --- */
+  .rodillo {
+    display: inline-flex;
+  }
+
+  .rodillo__d {
+    display: block;
+    overflow: hidden;
+    padding-block: 0.14em;
+    margin-block: -0.14em;
+  }
+
+  .rodillo__d > span {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* El año solo se funde: el movimiento lo hacen los dígitos. */
+    :global(.js) .hito__anio[data-aparece] {
+      transform: none;
+    }
+
+    :global(.js) .rodillo__d > span {
+      transform: translateY(115%);
+      transition: transform 0.95s var(--curva);
+      transition-delay: calc(var(--d, 0) * 75ms + var(--i, 0) * 55ms + 60ms);
+    }
+
+    :global(.js) .visible .rodillo__d > span {
+      transform: none;
+    }
+
+    /* La tarjeta entra desde el costado. */
+    :global(.js) .hito__cuerpo[data-aparece]:not(.visible) {
+      transform: translateX(3rem);
+    }
+
+    :global(.js) .hito:not(:has(.hito__cuerpo.visible)) .hito__nodo::before {
+      transform: scaleX(0);
+    }
+
+    .hito.activo .hito__nodo::after {
+      animation: onda 1.6s var(--curva) infinite;
+    }
   }
 
   @media (max-width: 899px) {
+    .tiempo__via {
+      --pad: 1.75rem;
+      --anio: clamp(2.75rem, 12vw, 3.75rem);
+      --eje: 0px;
+      --nodo-y: calc(var(--pad) + var(--anio) * 0.4);
+    }
+
     .hito {
       grid-template-columns: 1fr;
       padding-left: 1.75rem;
-      padding-block: 2.25rem;
     }
 
-    .hito::before,
-    .hito__nodo,
-    .tiempo__lista::after {
-      left: 0;
-    }
-
-    .tiempo__lista::after {
-      top: 2.25rem;
-    }
-
-    .hito:first-child::before {
-      top: 2.25rem;
-    }
-
-    .hito__nodo {
-      top: calc(2.25rem + 1rem);
+    .hito__nodo::before {
+      display: none;
     }
 
     .hito__anio,
     .hito__cuerpo {
       grid-column: 1 / -1;
-      padding-inline: 0;
+      margin-left: 0;
       text-align: left;
     }
 
@@ -241,39 +431,190 @@ const p = pagina('formacion');
       flex-direction: row;
       align-items: baseline;
       gap: 1rem;
-    }
-
-    .hito__desde {
-      font-size: clamp(2.75rem, 12vw, 4rem);
+      padding: 0;
     }
 
     .hito__cuerpo {
-      padding-top: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    .tiempo__hoy {
+      translate: none;
+      padding-left: 1.75rem;
+      padding-top: 0;
+      margin-top: -0.5rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      :global(.js) .hito__cuerpo[data-aparece]:not(.visible) {
+        transform: translateX(1.5rem);
+      }
     }
   }
 
-  /* ---------- Tablas editoriales ---------- */
+  /* ---------- Cursos: filas que responden al cursor ---------- */
   .tabla__fila {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 3fr);
     column-gap: var(--canal);
-    align-items: baseline;
-    padding-block: 1.25rem;
+    align-items: center;
+    padding: 1.35rem 1.25rem;
+    transition:
+      opacity 0.65s var(--curva) calc(var(--i, 0) * 70ms),
+      transform 0.65s var(--curva) calc(var(--i, 0) * 70ms),
+      background-color 0.6s ease,
+      padding-left 0.6s var(--curva);
   }
 
-  .tabla__anio.serif {
-    font-size: 1.25rem;
+  /* Barra de acento que baja por el borde izquierdo al pasar el cursor. */
+  .tabla__fila::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background: var(--acento);
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: transform 0.6s var(--curva);
+  }
+
+  .tabla__fila:hover {
+    padding-left: 2rem;
+    background: rgba(255, 253, 249, 0.7);
+  }
+
+  .tabla__fila:hover::after {
+    transform: scaleY(1);
+  }
+
+  .tabla__anio {
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
     font-variant-numeric: lining-nums tabular-nums;
+    transition: color 0.6s ease;
+  }
+
+  .tabla__fila:hover .tabla__anio {
+    color: var(--acento);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .tabla__fila[data-aparece]:not(.visible) {
+      transform: translateX(-2rem);
+    }
   }
 
   @media (max-width: 699px) {
     .tabla__fila {
       grid-template-columns: 1fr;
-      row-gap: 0.3rem;
+      row-gap: 0.4rem;
+      padding-inline: 0.75rem;
+    }
+
+    .tabla__fila:hover {
+      padding-left: 1.25rem;
     }
   }
 
-  .sociedades li + li {
-    margin-top: 0.6em;
+  /* ---------- Certificaciones: tarjetas con sello que se dibuja ---------- */
+  .certs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--canal);
+  }
+
+  .cert__sello {
+    margin-bottom: 0.5rem;
+    fill: none;
+    stroke: var(--acento);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .cert__sello circle {
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  .cert__vigencia {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+
+  .cert .tenue {
+    margin-bottom: 0.75rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .cert__sello circle,
+    :global(.js) .cert__sello path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    :global(.js) .cert.visible .cert__sello circle {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1.1s var(--curva) calc(var(--i, 0) * 55ms + 0.25s);
+    }
+
+    :global(.js) .cert.visible .cert__sello path {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.55s var(--curva) calc(var(--i, 0) * 55ms + 1s);
+    }
+  }
+
+  /* ---------- Sociedades: píldoras ---------- */
+  .sociedades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .sociedad {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.95rem 1.5rem 0.95rem 1.25rem;
+    border: 1px solid var(--linea-suave);
+    border-radius: 999px;
+    background: var(--superficie);
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+    transition:
+      opacity 0.65s var(--curva) calc(var(--i, 0) * 55ms),
+      transform 0.65s var(--curva) calc(var(--i, 0) * 55ms),
+      translate var(--hover),
+      border-color var(--hover),
+      box-shadow var(--hover);
+  }
+
+  .sociedad:hover {
+    translate: 0 -4px;
+    border-color: var(--tinta);
+    box-shadow: 0 22px 40px -26px rgba(23, 20, 15, 0.35);
+  }
+
+  .sociedad__punto {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--acento);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .sociedad[data-aparece]:not(.visible) {
+      transform: translateY(1rem) scale(0.92);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .sociedad {
+      border-radius: var(--radio);
+    }
   }
 </style>

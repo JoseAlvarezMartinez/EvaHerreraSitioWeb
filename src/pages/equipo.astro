@@ -16,7 +16,7 @@ const tonos = [1, 2, 4, 3, 5] as const;
     <ol class="equipo__lista">
       {
         equipo.integrantes.map((m, i) => (
-          <li class="miembro" tabindex="0" data-aparece data-linea style={`--i:${i % 3}`}>
+          <li class="miembro" tabindex="0" data-sigue data-aparece data-linea style={`--i:${i % 3}`}>
             <span class="num miembro__num">{String(i + 1).padStart(2, '0')}</span>
             <div class="miembro__cab">
               <h2 class="miembro__nombre titulo-l">{m.nombre}</h2>
@@ -98,14 +98,18 @@ const tonos = [1, 2, 4, 3, 5] as const;
 
   /* Escritorio con cursor: la foto aparece al pasar por la fila. */
   @media (hover: hover) and (min-width: 900px) {
+    /* La foto acompaña al cursor a lo largo de la fila (--fx lo pone movimiento.ts). */
     .miembro__foto {
+      left: calc(var(--fx, 0.66) * 100%);
+      margin-left: calc(clamp(10rem, 14.5vw, 17rem) / -2);
       opacity: 0;
       clip-path: inset(100% 0 0 0);
       transform: translateY(-46%) rotate(-2deg);
       transition:
         clip-path 0.75s var(--curva),
         opacity 0.5s ease,
-        transform 0.75s var(--curva);
+        transform 0.75s var(--curva),
+        left 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
 
     .miembro:nth-child(even) .miembro__foto {

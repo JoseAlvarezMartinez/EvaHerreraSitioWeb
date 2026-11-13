@@ -1,0 +1,18 @@
+---
+/* Franja con el trazo de un electrocardiograma, de lado a lado de la pantalla.
+   Se dibuja al aparecer y después la recorre un destello, como en un monitor. */
+const ANCHO = 2400;
+const BASE = 44;
+// Un latido: onda chica, pico, caída y recuperación. Mide 96 de ancho.
+const latido = 'l10-8 8 8h12l8-34 13 64 10-30h16l9-10 10 10';
+let d = `M0 ${BASE}`;
+for (let centro = 400; centro < ANCHO; centro += 400) d += `H${centro - 48}${latido}`;
+d += `H${ANCHO}`;
+---
+
+<div class="pulso-franja" data-pulso aria-hidden="true">
+  <svg viewBox={`0 0 ${ANCHO} 80`} preserveAspectRatio="xMidYMid slice" fill="none" focusable="false">
+    <path class="pulso-franja__base" d={d} pathLength="1"></path>
+    <path class="pulso-franja__barrido" d={d} pathLength="1"></path>
+  </svg>
+</div>

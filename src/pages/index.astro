@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Seccion from '../components/Seccion.astro';
 import Flecha from '../components/Flecha.astro';
 import Foto from '../components/Foto.astro';
+import Pulso from '../components/Pulso.astro';
 import { sitio } from '../data/sitio';
 import { sobre } from '../data/sobre';
 import { formacion } from '../data/formacion';
@@ -23,7 +24,11 @@ const tele = lugares.teleconsulta;
   <!-- ============ HERO ============ -->
   <section class="hero marco" aria-label="Presentación">
     <div class="hero__texto">
-      <p class="hero__sobre etiqueta" data-aparece>{sitio.especialidad} · {sitio.pais}</p>
+      <p class="hero__sobre etiqueta" data-aparece>
+        {[sitio.especialidad, ...sitio.rotulosPortada].map((rotulo, n) => (
+          <span class="hero__rotulo" style={`--n:${n}`}>{rotulo}</span>
+        ))}
+      </p>
       <h1 class="hero__nombre titulo-xl" aria-label={`${sitio.tratamiento} ${sitio.nombreCompleto}`}>
         <span class="renglon" style="--i:0" aria-hidden="true">
           <span class="renglon__in">{sitio.tratamiento} {sitio.nombreEnLineas[0]}</span>
@@ -45,7 +50,8 @@ const tele = lugares.teleconsulta;
       </p>
     </div>
 
-    <figure class="hero__visual">
+    <figure class="hero__visual" data-inclina>
+      <span class="hero__ondas" aria-hidden="true"><i></i><i></i><i></i></span>
       <div class="hero__foto" data-aparece="cortina" style="--i:2">
         <Foto
           archivo={sobre.foto}
@@ -64,6 +70,7 @@ const tele = lugares.teleconsulta;
       <span class="chip hero__chip hero__chip--2" data-aparece style="--i:7">{sitio.matriculas[0]}</span>
     </figure>
   </section>
+  <Pulso />
 
   <!-- ============ SOBRE MÍ ============ -->
   <Seccion numero="01" titulo="Sobre mí" id="sobre" suave encabezado={sobre.presentacion}>
@@ -95,10 +102,10 @@ const tele = lugares.teleconsulta;
     <div class="recorrido">
       <article class="tarjeta" data-aparece>
         <h3 class="titulo-m">Formación</h3>
-        <ol class="recorrido__lista">
+        <ol class="recorrido__lista goteo">
           {
-            formacionDestacada.map((h) => (
-              <li>
+            formacionDestacada.map((h, j) => (
+              <li style={`--j:${j}`}>
                 <span class="recorrido__cuando">{h.anio}</span>
                 <span>
                   <span class="recorrido__que">{h.titulo}</span>
@@ -116,10 +123,10 @@ const tele = lugares.teleconsulta;
 
       <article class="tarjeta" data-aparece style="--i:1">
         <h3 class="titulo-m">Trayectoria</h3>
-        <ol class="recorrido__lista">
+        <ol class="recorrido__lista goteo">
           {
-            trayectoriaDestacada.map((t) => (
-              <li>
+            trayectoriaDestacada.map((t, j) => (
+              <li style={`--j:${j}`}>
                 <span class="recorrido__cuando">{t.periodo}</span>
                 <span>
                   <span class="recorrido__que">{t.cargo}</span>
@@ -267,13 +274,23 @@ const tele = lugares.teleconsulta;
 
   .hero__sobre {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.9rem;
+    gap: 0.6rem 1.1rem;
     color: var(--tinta-2);
   }
 
-  .hero__sobre::before {
+  /* Cada rótulo lleva su rayita de acento a la izquierda. */
+  .hero__rotulo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .hero__rotulo::before {
     content: '';
+    flex: none;
     width: 2rem;
     height: 1px;
     background: var(--acento);
@@ -478,6 +495,88 @@ const tele = lugares.teleconsulta;
     .plantel,
     .lugares {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* ================= HERO CON PROFUNDIDAD =================
+     El retrato se inclina hacia el cursor (lo mueve movimiento.ts), las
+     etiquetas flotan por delante y unas ondas de pulso salen por detrás. */
+  .hero__visual {
+    transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .hero__chip {
+    translate: 0 0 46px;
+  }
+
+  .hero__ondas {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translateZ(-50px);
+    pointer-events: none;
+  }
+
+  .hero__ondas i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    aspect-ratio: 1;
+    margin: -50% 0 0 -50%;
+    border: 1px solid var(--acento);
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  @keyframes hero-onda {
+    0% {
+      scale: 0.72;
+      opacity: 0;
+    }
+
+    15% {
+      opacity: 0.42;
+    }
+
+    100% {
+      scale: 1.3;
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-flota {
+    0%,
+    100% {
+      translate: 0 -5px 46px;
+    }
+
+    50% {
+      translate: 0 6px 46px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__ondas i {
+      animation: hero-onda 5.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+    }
+
+    .hero__ondas i:nth-child(2) {
+      animation-delay: 1.8s;
+    }
+
+    .hero__ondas i:nth-child(3) {
+      animation-delay: 3.6s;
+    }
+
+    .hero__chip--1 {
+      animation: hero-flota 6s ease-in-out infinite;
+    }
+
+    .hero__chip--2 {
+      animation: hero-flota 7.5s ease-in-out -3s infinite reverse;
     }
   }
 </style>

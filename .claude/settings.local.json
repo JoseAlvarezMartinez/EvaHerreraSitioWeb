@@ -6,7 +6,15 @@
       "Bash(node -e \"console.log\\(require\\('./node_modules/astro/package.json'\\).version\\)\")",
       "Bash(python3 -)",
       "Bash(npx astro *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "mcp__a94477ae-e91f-426f-bfe6-b0e7f2dd7437__list_projects",
+      "mcp__a94477ae-e91f-426f-bfe6-b0e7f2dd7437__list_teams",
+      "Bash(pkill -f \"astro check\")",
+      "Bash(awk '/^<style>/{p=1} p' src/pages/equipo.astro)",
+      "Bash(awk '/^<style>/{p=1} p' src/pages/contacto.astro)",
+      "Bash(awk '/^<style>/{p=1} p' src/pages/sobre-mi.astro)",
+      "Bash(awk '/^<style>/{p=1} p' src/pages/donde-atiende.astro)",
+      "Bash(awk '/^<style>/{p=1} p' src/pages/experiencia.astro)"
     ]
   }
 }

@@ -16,7 +16,7 @@ const dos = (n: number) => String(n).padStart(2, '0');
     <ol class="filas trayectoria">
       {
         experiencia.trayectoria.map((t, i) => (
-          <li class="trayectoria__fila" data-aparece data-linea style={`--i:${i % 3}`}>
+          <li class="trayectoria__fila fila-viva" data-aparece data-linea style={`--i:${i % 3}`}>
             <p class="trayectoria__periodo etiqueta">{t.periodo}</p>
             <div class="trayectoria__cuerpo">
               <h3 class="titulo-m">{t.cargo}</h3>
@@ -61,8 +61,8 @@ const dos = (n: number) => String(n).padStart(2, '0');
         experiencia.procedimientos.map((g, i) => (
           <div class="procedimientos__grupo" data-aparece style={`--i:${i}`}>
             <h3 class="etiqueta">{g.grupo}</h3>
-            <ul class="filas">
-              {g.items.map((item) => <li>{item}</li>)}
+            <ul class="filas goteo">
+              {g.items.map((item, j) => <li style={`--j:${j}`}>{item}</li>)}
             </ul>
           </div>
         ))
@@ -76,7 +76,7 @@ const dos = (n: number) => String(n).padStart(2, '0');
       <Seccion numero={`${p.numero}.5`} titulo="Docencia" id="docencia">
         <ul class="filas docencia">
           {experiencia.docencia.map((d, i) => (
-            <li class="docencia__fila" data-aparece data-linea style={`--i:${i % 3}`}>
+            <li class="docencia__fila fila-viva" data-aparece data-linea style={`--i:${i % 3}`}>
               <span class="etiqueta tenue">{d.periodo}</span>
               <span class="titulo-s">{d.actividad}</span>
               <span class="chico tenue">{d.institucion}</span>

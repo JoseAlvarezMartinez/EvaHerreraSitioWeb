@@ -54,8 +54,8 @@ const dos = (n: number) => String(n).padStart(2, '0');
               <div>
                 <dt class="etiqueta">Coberturas</dt>
                 <dd>
-                  <ul class="ficha__coberturas">
-                    {l.obrasSociales.map((o) => <li>{o}</li>)}
+                  <ul class="ficha__coberturas goteo">
+                    {l.obrasSociales.map((o, j) => <li style={`--j:${j}`}>{o}</li>)}
                   </ul>
                 </dd>
               </div>
@@ -102,10 +102,10 @@ const dos = (n: number) => String(n).padStart(2, '0');
 
       <div class="tele__texto" data-aparece>
         <p class="bajada">{tele.descripcion}</p>
-        <ol class="tele__pasos">
+        <ol class="tele__pasos goteo">
           {
             tele.pasos.map((paso, i) => (
-              <li>
+              <li style={`--j:${i * 2}`}>
                 <span class="num">{dos(i + 1)}</span>
                 <span>{paso}</span>
               </li>

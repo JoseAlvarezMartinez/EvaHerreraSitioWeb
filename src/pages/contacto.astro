@@ -22,14 +22,14 @@ const f = contacto.formulario;
 
       <ul class="canales__lista">
         <li data-aparece>
-          <a class="canal" href={enlaceWhatsapp()} target="_blank" rel="noopener noreferrer">
+          <a class="canal fila-viva" href={enlaceWhatsapp()} target="_blank" rel="noopener noreferrer">
             <span class="etiqueta tenue">WhatsApp</span>
             <span class="canal__valor titulo-m">{contacto.whatsapp.visible}</span>
             <Flecha diagonal />
           </a>
         </li>
         <li data-aparece style="--i:1">
-          <a class="canal" href={`mailto:${contacto.email}`}>
+          <a class="canal fila-viva" href={`mailto:${contacto.email}`}>
             <span class="etiqueta tenue">Email</span>
             <span class="canal__valor titulo-m">{contacto.email}</span>
             <Flecha diagonal />
@@ -38,7 +38,7 @@ const f = contacto.formulario;
         {
           contacto.redes.map((r, i) => (
             <li data-aparece style={`--i:${i + 2}`}>
-              <a class="canal" href={r.url} target="_blank" rel="noopener noreferrer">
+              <a class="canal fila-viva" href={r.url} target="_blank" rel="noopener noreferrer">
                 <span class="etiqueta tenue">{r.nombre}</span>
                 <span class="canal__valor titulo-m">{r.usuario}</span>
                 <Flecha diagonal />
@@ -301,7 +301,6 @@ const f = contacto.formulario;
   .campo textarea:focus-visible {
     outline: none;
     border-bottom-color: var(--acento);
-    box-shadow: 0 1px 0 var(--acento);
   }
 
   .campo--trampa {
@@ -346,5 +345,28 @@ const f = contacto.formulario;
     .campo--mitad {
       grid-column: 1 / -1;
     }
+  }
+
+  /* Al entrar a un campo, la línea de acento se dibuja de izquierda a derecha. */
+  .campo {
+    position: relative;
+  }
+
+  .campo::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--acento);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.6s var(--curva);
+    pointer-events: none;
+  }
+
+  .campo:focus-within::after {
+    transform: none;
   }
 </style>

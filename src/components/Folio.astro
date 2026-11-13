@@ -1,4 +1,6 @@
 ---
+import Pulso from './Pulso.astro';
+
 /* Encabezado de página: número, nombre de sección, título enorme y bajada. */
 interface Props {
   numero: string;
@@ -37,3 +39,4 @@ const { numero, nombre, titulo, enfasis = '', intro } = Astro.props;
     )
   }
 </header>
+<Pulso />

@@ -79,7 +79,17 @@ cada lugar en `src/data/lugares.ts`.
 
 ### Animaciones
 
-- **Entre páginas:** la página nueva sube como una hoja sobre la anterior.
+- **Apertura:** la primera vez que alguien entra en la sesión, un latido se traza en el centro,
+  la línea se extiende y la pantalla se abre en dos. Dura unos 2,7 segundos y se saltea con un
+  clic, una tecla o el scroll. Tiempos y colores: `src/styles/global.css`, bloque «Apertura».
+- **Entre páginas:** la página nueva sube como una hoja sobre la anterior, y la pestaña activa
+  del menú se desliza hasta la nueva.
+- **Pulso:** una franja con el trazo de un electrocardiograma abre cada página
+  (`src/components/Pulso.astro`).
+- **Con el cursor:** las tarjetas se iluminan donde está el cursor, los botones se le acercan,
+  el retrato de la portada se inclina y la foto de cada integrante del equipo lo acompaña.
+  Todo eso vive en `src/scripts/movimiento.ts` y `src/styles/movimiento.css`, y no corre en
+  pantallas táctiles.
 - **Al hacer scroll:** los textos grandes entran palabra por palabra, las líneas
   se dibujan, las fotos y los mapas se descubren con una cortina, y la cabecera
   se esconde al bajar y vuelve al subir, con una barra fina de progreso.
@@ -87,6 +97,8 @@ cada lugar en `src/data/lugares.ts`.
   navegadores que no las soportan, esos elementos quedan quietos y se ven bien.
 - Para usarlas en contenido nuevo alcanza con un atributo en la etiqueta:
   `data-aparece`, `data-aparece="cortina"`, `data-palabras` o `data-linea`.
+  Dos clases más: `fila-viva` (fila que responde al cursor) y `goteo` (los ítems de una
+  lista entran uno detrás del otro; cada ítem lleva `style="--j:N"`).
 
 ## Antes de publicar
 

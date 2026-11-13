@@ -198,4 +198,25 @@ const p = pagina('sobre');
       grid-column: 1 / -1;
     }
   }
+
+  /* La cita se va entintando palabra por palabra a medida que se sube. */
+  @keyframes entintar {
+    from {
+      color: color-mix(in srgb, var(--tinta) 16%, transparent);
+    }
+
+    to {
+      color: var(--tinta);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .cita__texto :global(.palabra > span) {
+        animation: entintar linear both;
+        animation-timeline: view();
+        animation-range: cover calc(16% + var(--p, 0) * 0.8%) cover calc(28% + var(--p, 0) * 0.8%);
+      }
+    }
+  }
 </style>
