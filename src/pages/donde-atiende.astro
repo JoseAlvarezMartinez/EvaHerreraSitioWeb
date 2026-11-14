@@ -17,7 +17,25 @@ const dos = (n: number) => String(n).padStart(2, '0');
 
   <div class="directorio">
     {
-      lugares.consultorios.map((l, i) => (
+      lugares.consultorios.map((l, i) => l.proximamente ? (
+        <article class="ficha ficha--pronto" aria-labelledby={`lugar-${i}`} data-linea="fuerte">
+          <div class="marco grilla">
+            <header class="ficha__cab">
+              <p class="ficha__meta" data-aparece>
+                <span class="num">{p.numero}.{i + 1}</span>
+                <span class="etiqueta ficha__estado">
+                  <span class="latido" aria-hidden="true"></span>
+                  {l.tipo}
+                </span>
+              </p>
+              <h2 class="titulo-l" id={`lugar-${i}`} data-palabras>
+                {l.nombre}
+              </h2>
+              <p class="bajada ficha__anuncio" data-aparece style="--i:2">{l.nota}</p>
+            </header>
+          </div>
+        </article>
+      ) : (
         <article class="ficha" aria-labelledby={`lugar-${i}`} data-linea="fuerte">
           <div class="marco grilla">
             <header class="ficha__cab">
@@ -34,9 +52,11 @@ const dos = (n: number) => String(n).padStart(2, '0');
               <div>
                 <dt class="etiqueta">Dirección</dt>
                 <dd>
-                  {l.direccion}
-                  <br />
-                  <span class="tenue">{l.localidad}</span>
+                  <address>
+                    {l.direccion}
+                    <br />
+                    <span class="tenue">{l.localidad}</span>
+                  </address>
                 </dd>
               </div>
               <div>
@@ -156,6 +176,19 @@ const dos = (n: number) => String(n).padStart(2, '0');
     align-items: baseline;
     gap: 1.25rem;
     margin-bottom: clamp(1.5rem, 3vw, 2.75rem);
+  }
+
+  /* Lugar todavía no disponible: solo el anuncio. */
+  .ficha__estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--acento);
+  }
+
+  .ficha__anuncio {
+    max-width: 34em;
+    margin-top: 1.25rem;
   }
 
   .ficha__datos {

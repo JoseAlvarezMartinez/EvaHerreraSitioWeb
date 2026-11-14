@@ -1,0 +1,14 @@
+{
+  "name": "historia-instagram",
+  "private": true,
+  "type": "module",
+  "description": "Genera el video vertical de presentación del sitio (1080x1920, 30 fps).",
+  "scripts": {
+    "generar": "./generar.sh",
+    "vista-previa": "node render.mjs --out prev --dsf 1 --jpg --sin-blur --solo 30,100,140,190,250,330,400,470,539"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.17.0",
+    "sharp": "^0.35.5"
+  }
+}

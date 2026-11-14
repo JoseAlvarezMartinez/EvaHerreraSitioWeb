@@ -1,75 +1,82 @@
 /* ------------------------------------------------------------------
    FORMACIÓN
    La línea de tiempo se muestra en el orden en que están escritos los ítems.
-   Los años, títulos e instituciones son EJEMPLOS: reemplazar todos.
+   Los datos de la línea de tiempo son los reales. Los cursos, certificaciones
+   y sociedades de más abajo siguen siendo EJEMPLOS: reemplazarlos.
 
    Campos de cada ítem:
      anio         año que se ve en grande
-     hasta        (opcional) año de finalización, para períodos
-     tipo         Grado · Residencia · Máster · Posgrado · Certificación
+     hasta        (opcional) año de finalización, para períodos ya cerrados
+     enCurso      (opcional) true si se está cursando: muestra «Actualidad»
+     tipo         Grado · Especialidad · Diplomatura · Máster · Formación
      titulo       nombre del título o programa
      institucion  dónde se cursó
      detalle      (opcional) una o dos frases
 ------------------------------------------------------------------- */
 
+interface Hito {
+  anio: string;
+  hasta?: string;
+  enCurso?: boolean;
+  tipo: string;
+  titulo: string;
+  institucion: string;
+  detalle?: string;
+}
+
+const lineaDeTiempo: Hito[] = [
+  {
+    anio: '2018',
+    tipo: 'Grado',
+    titulo: 'Médica',
+    institucion: 'Universidad Central del Ecuador',
+  },
+  {
+    anio: '2024',
+    tipo: 'Especialidad',
+    titulo: 'Cirujana General',
+    institucion: 'Colegio de Médicos Distrito IV San Martín · Sede UBA',
+  },
+  {
+    anio: '2025',
+    tipo: 'Diplomatura',
+    titulo: 'Diplomatura en Coloproctología',
+    institucion: 'Sociedad Argentina de Coloproctología y Universidad Abierta Interamericana',
+  },
+  {
+    anio: '2026',
+    tipo: 'Máster',
+    titulo: 'Máster en Proctología',
+    institucion: 'TECH Global University · Andorra',
+  },
+  {
+    anio: '2026',
+    enCurso: true,
+    tipo: 'Formación',
+    titulo: 'Endoscopia diagnóstica y terapéutica',
+    institucion: 'Universidad de Buenos Aires (UBA)',
+  },
+  {
+    anio: '2026',
+    enCurso: true,
+    tipo: 'Especialidad',
+    titulo: 'Gastroenterología',
+    institucion: 'Colegio de Médicos Distrito II',
+  },
+  {
+    anio: '2026',
+    enCurso: true,
+    tipo: 'Máster',
+    titulo: 'Máster en Endoscopia Oncológica',
+    institucion: 'TECH Global University · Andorra',
+  },
+];
+
 export const formacion = {
   intro:
     'La formación de una cirujana no termina con la residencia. Este es el recorrido hasta hoy.',
 
-  lineaDeTiempo: [
-    {
-      anio: '2010',
-      tipo: 'Grado',
-      titulo: 'Médica',
-      institucion: 'Universidad [COMPLETAR] · Facultad de Medicina',
-      detalle: 'Carrera de grado. [COMPLETAR: año real de egreso y distinciones, si las hay.]',
-    },
-    {
-      anio: '2011',
-      hasta: '2015',
-      tipo: 'Residencia',
-      titulo: 'Residencia en Cirugía General',
-      institucion: 'Hospital [COMPLETAR]',
-      detalle:
-        'Formación quirúrgica completa, con rotaciones por [COMPLETAR].',
-    },
-    {
-      anio: '2015',
-      hasta: '2016',
-      tipo: 'Residencia',
-      titulo: 'Jefatura de residentes',
-      institucion: 'Hospital [COMPLETAR] · Servicio de Cirugía General',
-      detalle: 'Coordinación docente y asistencial de la residencia. [COMPLETAR]',
-    },
-    {
-      anio: '2016',
-      tipo: 'Certificación',
-      titulo: 'Especialista en Cirugía General',
-      institucion: '[COMPLETAR: entidad que otorga el título de especialista]',
-      detalle: '',
-    },
-    {
-      anio: '2018',
-      tipo: 'Máster',
-      titulo: 'Máster en [COMPLETAR]',
-      institucion: 'Universidad [COMPLETAR]',
-      detalle: 'Tesis o trabajo final: [COMPLETAR].',
-    },
-    {
-      anio: '2020',
-      tipo: 'Posgrado',
-      titulo: 'Posgrado en Cirugía Laparoscópica [COMPLETAR]',
-      institucion: '[COMPLETAR: institución]',
-      detalle: '',
-    },
-    {
-      anio: '2022',
-      tipo: 'Posgrado',
-      titulo: 'Posgrado en Cirugía de Pared Abdominal [COMPLETAR]',
-      institucion: '[COMPLETAR: institución]',
-      detalle: '',
-    },
-  ],
+  lineaDeTiempo,
 
   // Cursos y actualizaciones. Lista compacta debajo de la línea de tiempo.
   cursos: [

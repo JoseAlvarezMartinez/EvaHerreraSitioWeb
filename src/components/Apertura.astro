@@ -1,0 +1,24 @@
+---
+/* Apertura del sitio: un latido se traza, la línea se extiende y la pantalla se
+   abre en dos. Solo se ve la primera vez que se entra en la sesión; la activa
+   el script del <head> (clase "intro") y la retira src/scripts/sitio.ts.
+   Estilos y tiempos: src/styles/global.css, bloque «Apertura». */
+import { sitio } from '../data/sitio';
+import { firma } from '../lib/seo';
+---
+
+<div class="apertura" aria-hidden="true">
+  <div class="apertura__hoja apertura__hoja--a">
+    <p class="apertura__nombre"><span>{firma}</span></p>
+  </div>
+  <div class="apertura__hoja apertura__hoja--b">
+    <p class="apertura__rol etiqueta">{sitio.especialidad}</p>
+  </div>
+  <div class="apertura__corte">
+    <span class="apertura__linea apertura__linea--izq"></span>
+    <svg class="apertura__pico" viewBox="0 0 160 120" width="160" height="120" fill="none" focusable="false">
+      <path pathLength="1" d="M0 60h28l12-10 10 10h14l10-50 16 96 12-46h18l10-12 12 12h18"></path>
+    </svg>
+    <span class="apertura__linea apertura__linea--der"></span>
+  </div>
+</div>

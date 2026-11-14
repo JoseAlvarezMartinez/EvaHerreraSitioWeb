@@ -1,0 +1,28 @@
+---
+/* Barra de ubicación de las páginas internas: «Volver al inicio» y la ruta. */
+import { paginas } from '../data/sitio';
+
+interface Props {
+  /** Nombre de la página actual. */
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+const pagina = paginas.find((p) => p.nombre === titulo);
+const total = String(paginas.length).padStart(2, '0');
+---
+
+<nav class="miga" aria-label="Ubicación en el sitio">
+  <div class="marco miga__in">
+    <a class="volver" href="/">
+      <span aria-hidden="true">←</span> Volver al inicio
+    </a>
+    <div class="miga__ruta">
+      <ol class="miga__lista" role="list">
+        <li><a href="/">Inicio</a></li>
+        <li aria-current="page">{titulo}</li>
+      </ol>
+      {pagina && <p class="miga__cuenta">Página {pagina.numero} de {total}</p>}
+    </div>
+  </div>
+</nav>

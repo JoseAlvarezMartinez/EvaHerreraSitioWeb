@@ -19,13 +19,17 @@ const { numero, nombre, titulo, enfasis = '', intro } = Astro.props;
   </p>
   <h1 class="folio__titulo titulo-xl">
     <span class="renglon" style="--i:0"><span class="renglon__in">{titulo}</span></span>
+    {/* El espacio separa las dos palabras para buscadores y lectores de pantalla. */}
     {
       enfasis && (
-        <span class="renglon renglon--2" style="--i:1">
-          <span class="renglon__in">
-            <em>{enfasis}</em>
+        <>
+          {' '}
+          <span class="renglon renglon--2" style="--i:1">
+            <span class="renglon__in">
+              <em>{enfasis}</em>
+            </span>
           </span>
-        </span>
+        </>
       )
     }
   </h1>

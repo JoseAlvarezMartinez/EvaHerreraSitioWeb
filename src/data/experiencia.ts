@@ -1,6 +1,7 @@
 /* ------------------------------------------------------------------
    EXPERIENCIA
-   Cargos, períodos e instituciones son EJEMPLOS: reemplazar todos.
+   La trayectoria es la real. La lista de instituciones y la docencia siguen
+   siendo EJEMPLOS: reemplazarlas.
    Las áreas y los procedimientos son los habituales de la cirugía general;
    la doctora tiene que confirmar cuáles realiza.
 ------------------------------------------------------------------- */
@@ -9,30 +10,54 @@ export const experiencia = {
   intro:
     'Dónde trabajé, en qué me especialicé y qué cirugías hago hoy.',
 
-  // Trayectoria, de lo más reciente a lo más antiguo.
+  // Trayectoria. Se muestra en este orden; los cuatro primeros van también en la portada.
   trayectoria: [
     {
-      periodo: '2019 — Hoy',
-      cargo: 'Cirujana general de planta',
-      institucion: 'Sanatorio [COMPLETAR]',
-      detalle: 'Cirugía programada y de urgencia. Consultorio externo. [COMPLETAR]',
+      periodo: '2024 — Hoy',
+      cargo: 'Cirujana de guardia y planta',
+      institucion: 'Hospital Zonal de Agudos Magdalena V. de Martínez',
+      detalle: '',
     },
     {
-      periodo: '2016 — Hoy',
-      cargo: 'Consultorio particular',
-      institucion: 'Consultorio [COMPLETAR]',
-      detalle: 'Consulta, evaluación prequirúrgica y controles posoperatorios.',
+      periodo: '2024 — 2026',
+      cargo: 'Jefa de residentes de Cirugía General',
+      institucion: 'Hospital Zonal de Agudos Magdalena V. de Martínez',
+      detalle: '',
     },
     {
-      periodo: '2016 — 2019',
-      cargo: 'Cirujana de guardia',
-      institucion: 'Hospital [COMPLETAR]',
-      detalle: 'Atención de urgencias quirúrgicas. [COMPLETAR]',
+      periodo: '2025 — Hoy',
+      cargo: 'Cirujana de planta',
+      institucion: 'Hospital Sanguinetti',
+      detalle: '',
     },
     {
-      periodo: '2011 — 2016',
-      cargo: 'Residente y jefa de residentes',
-      institucion: 'Hospital [COMPLETAR] · Servicio de Cirugía General',
+      periodo: '2022 — Hoy',
+      cargo: 'Médica',
+      institucion: 'Sistema de Emergencias de Tigre (SET)',
+      detalle: '',
+    },
+    {
+      periodo: '2020 — 2021',
+      cargo: 'Médica',
+      institucion: 'Gobierno de la Ciudad Autónoma de Buenos Aires',
+      detalle: '',
+    },
+    {
+      periodo: '2020 — 2025',
+      cargo: 'Tutora de cátedras de cirugía',
+      institucion: 'UDH Tigre',
+      detalle: '',
+    },
+    {
+      periodo: '2022 — 2023',
+      cargo: 'Médica',
+      institucion: 'Clínica San Fernando',
+      detalle: '',
+    },
+    {
+      periodo: '2019 — 2020',
+      cargo: 'Directora del Centro de Salud Isinliví',
+      institucion: 'Sigchos, Ecuador',
       detalle: '',
     },
   ],
@@ -67,8 +92,16 @@ export const experiencia = {
       descripcion: 'Apendicitis y otros cuadros abdominales agudos.',
     },
     {
-      nombre: '[COMPLETAR]',
-      descripcion: 'Otra área de práctica, si corresponde. [COMPLETAR]',
+      nombre: 'Problemas digestivos',
+      descripcion: 'Gastritis, reflujo, distensión abdominal y dolor abdominal.',
+    },
+    {
+      nombre: 'Alteración del tránsito intestinal',
+      descripcion: 'Diarreas, constipación, sangrados digestivos y hemorroides.',
+    },
+    {
+      nombre: 'Lectura e interpretación de estudios',
+      descripcion: 'Endoscopias, tomografías y laboratorios.',
     },
   ],
 

@@ -32,7 +32,7 @@ const tele = lugares.teleconsulta;
       <h1 class="hero__nombre titulo-xl" aria-label={`${sitio.tratamiento} ${sitio.nombreCompleto}`}>
         <span class="renglon" style="--i:0" aria-hidden="true">
           <span class="renglon__in">{sitio.tratamiento} {sitio.nombreEnLineas[0]}</span>
-        </span>
+        </span>{' '}
         <span class="renglon" style="--i:1" aria-hidden="true">
           <span class="renglon__in">{sitio.nombreEnLineas.slice(1).join(' ')}</span>
         </span>
@@ -51,7 +51,7 @@ const tele = lugares.teleconsulta;
     </div>
 
     <figure class="hero__visual" data-inclina>
-      <span class="hero__ondas" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="hero__ondas" aria-hidden="true"><span></span><span></span><span></span></span>
       <div class="hero__foto" data-aparece="cortina" style="--i:2">
         <Foto
           archivo={sobre.foto}
@@ -106,7 +106,7 @@ const tele = lugares.teleconsulta;
           {
             formacionDestacada.map((h, j) => (
               <li style={`--j:${j}`}>
-                <span class="recorrido__cuando">{h.anio}</span>
+                <span class="recorrido__cuando">{h.enCurso ? `${h.anio} — Hoy` : h.anio}</span>
                 <span>
                   <span class="recorrido__que">{h.titulo}</span>
                   <span class="recorrido__donde chico tenue">{h.institucion}</span>
@@ -210,24 +210,32 @@ const tele = lugares.teleconsulta;
           <article class="tarjeta lugar" data-aparece style={`--i:${i}`}>
             <p class="etiqueta tenue">{l.tipo}</p>
             <h3 class="titulo-m">{l.nombre}</h3>
-            <dl class="lugar__datos">
-              <div>
-                <dt>Dirección</dt>
-                <dd>{l.direccion}</dd>
-              </div>
-              <div>
-                <dt>Días</dt>
-                <dd>{l.dias}</dd>
-              </div>
-              <div>
-                <dt>Horarios</dt>
-                <dd>{l.horarios}</dd>
-              </div>
-            </dl>
-            <a class="enlace enlace--flecha lugar__mas" href="/donde-atiende/">
-              Coberturas y cómo llegar
-              <Flecha />
-            </a>
+            {l.proximamente ? (
+              <p class="texto tenue">{l.nota}</p>
+            ) : (
+              <>
+                <dl class="lugar__datos">
+                  <div>
+                    <dt>Dirección</dt>
+                    <dd>
+                      {l.direccion}, {l.localidad}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Días</dt>
+                    <dd>{l.dias}</dd>
+                  </div>
+                  <div>
+                    <dt>Horarios</dt>
+                    <dd>{l.horarios}</dd>
+                  </div>
+                </dl>
+                <a class="enlace enlace--flecha lugar__mas" href="/donde-atiende/">
+                  Coberturas y cómo llegar
+                  <Flecha />
+                </a>
+              </>
+            )}
           </article>
         ))
       }
@@ -519,7 +527,7 @@ const tele = lugares.teleconsulta;
     pointer-events: none;
   }
 
-  .hero__ondas i {
+  .hero__ondas span {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -559,15 +567,15 @@ const tele = lugares.teleconsulta;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .hero__ondas i {
+    .hero__ondas span {
       animation: hero-onda 5.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
     }
 
-    .hero__ondas i:nth-child(2) {
+    .hero__ondas span:nth-child(2) {
       animation-delay: 1.8s;
     }
 
-    .hero__ondas i:nth-child(3) {
+    .hero__ondas span:nth-child(3) {
       animation-delay: 3.6s;
     }
 

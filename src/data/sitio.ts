@@ -15,7 +15,7 @@ export const sitio = {
   // Franja de datos al pie del hero de la portada.
   fichaPortada: [
     { etiqueta: 'Especialidad', valor: 'Cirugía general' },
-    { etiqueta: 'Matrícula', valor: 'M.N. [COMPLETAR]' },
+    { etiqueta: 'Matrícula', valor: 'M.N. 174677 · M.P. 457551' },
     { etiqueta: 'Atención', valor: 'Consultorio y teleconsulta' },
   ],
 
@@ -27,11 +27,11 @@ export const sitio = {
   modalidades: 'Consultorio y teleconsulta',
 
   // Matrículas. Se muestran en el pie y en "Sobre mí".
-  matriculas: ['M.N. 174677', 'M.P. [COMPLETAR]'],
+  matriculas: ['M.N. 174677', 'M.P. 457551'],
 
   // Descripción corta para buscadores y para compartir en redes.
   descripcion:
-    'Dra. Eva Herrera Bravo, cirujana general. Atención en consultorio y por teleconsulta en Argentina.',
+    'Dra. Eva Herrera Bravo, cirujana general (M.N. 174677). Atención en consultorio en Garín, Buenos Aires, y por teleconsulta.',
 
   // Frase de presentación del hero de la portada.
   bajada:

@@ -14,7 +14,12 @@
       "Bash(awk '/^<style>/{p=1} p' src/pages/contacto.astro)",
       "Bash(awk '/^<style>/{p=1} p' src/pages/sobre-mi.astro)",
       "Bash(awk '/^<style>/{p=1} p' src/pages/donde-atiende.astro)",
-      "Bash(awk '/^<style>/{p=1} p' src/pages/experiencia.astro)"
+      "Bash(awk '/^<style>/{p=1} p' src/pages/experiencia.astro)",
+      "Bash(npm ls *)",
+      "Bash(grep -i \"postcss\\\\|csstree\\\\|css-tree\\\\|lightningcss\\\\|prettier\\\\|typescript$\")",
+      "Bash(node \"/private/tmp/claude-501/-Users-josealvarez-Desktop-DraEvaSitioWeb/a22fcbae-df07-406d-85c5-3993b47c98ff/scratchpad/unificar-css.mjs\" .)",
+      "Bash(node \"/private/tmp/claude-501/-Users-josealvarez-Desktop-DraEvaSitioWeb/a22fcbae-df07-406d-85c5-3993b47c98ff/scratchpad/unificar-css.mjs\" . --aplicar)",
+      "Bash(xargs sed -i '' 's/var\\(--serif\\)/var\\(--sans\\)/g')"
     ]
   }
 }

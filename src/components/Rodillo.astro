@@ -1,0 +1,42 @@
+---
+/* Número que entra rodando, dígito por dígito, cuando su contenedor aparece
+   (clase "visible", la pone el script de apariciones). Los lectores de pantalla
+   reciben el número entero, no los dígitos sueltos. */
+interface Props {
+  texto: string;
+}
+const { texto } = Astro.props;
+---
+
+<span class="solo-lectores">{texto}</span><span class="rodillo" aria-hidden="true"
+  >{[...texto].map((digito, n) => <span class="rodillo__d" style={`--d:${n}`}><span>{digito}</span></span>)}</span
+>
+
+<style>
+  .rodillo {
+    display: inline-flex;
+  }
+
+  .rodillo__d {
+    display: block;
+    overflow: hidden;
+    padding-block: 0.14em;
+    margin-block: -0.14em;
+  }
+
+  .rodillo__d > span {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .rodillo__d > span {
+      transform: translateY(115%);
+      transition: transform 0.95s var(--curva);
+      transition-delay: calc(var(--d, 0) * 75ms + var(--i, 0) * 55ms + 60ms);
+    }
+
+    :global(.js .visible) .rodillo__d > span {
+      transform: none;
+    }
+  }
+</style>

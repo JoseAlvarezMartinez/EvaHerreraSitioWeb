@@ -15,8 +15,8 @@ export const sobre = {
 
   // Biografía. Un párrafo por elemento.
   bio: [
-    'Me recibí de médica en la Universidad [COMPLETAR] e hice la residencia en Cirugía General en el Hospital [COMPLETAR].',
-    'Desde entonces trabajo en [COMPLETAR], donde opero y atiendo consultorio. También atiendo por teleconsulta a pacientes que viven lejos o que necesitan una segunda opinión.',
+    'Me recibí de médica en la Universidad Central del Ecuador e hice la residencia en Cirugía General en el Hospital Zonal de Agudos Magdalena V. de Martínez.',
+    'Desde entonces trabajo en unidades hospitalarias tanto provinciales como municipales, donde opero y atiendo consultorio. También atiendo por teleconsulta a pacientes que viven lejos o que necesitan una segunda opinión.',
     'Una cirugía no empieza en el quirófano. Empieza en la primera consulta, cuando nos sentamos a hablar. Por eso le doy a esa conversación el tiempo que necesita.',
   ],
 
@@ -50,8 +50,8 @@ export const sobre = {
   // Ficha breve al costado de la biografía.
   ficha: [
     { etiqueta: 'Especialidad', valor: 'Cirugía general' },
-    { etiqueta: 'Matrícula', valor: 'M.N. 174677 · M.P. [COMPLETAR]' },
+    { etiqueta: 'Matrícula', valor: 'M.N. 174677 · M.P. 457551' },
     { etiqueta: 'Atención', valor: 'Consultorio y teleconsulta' },
-    { etiqueta: 'Idiomas', valor: 'Español, [COMPLETAR]' },
+    { etiqueta: 'Idiomas', valor: 'Español' },
   ],
 };

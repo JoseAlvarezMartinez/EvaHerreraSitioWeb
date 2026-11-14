@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Historia de Instagram — Dra. Eva Herrera Bravo</title>
+<style>
+  @font-face {
+    font-family: 'Inter Variable';
+    src: url('inter.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-display: block;
+  }
+  :root {
+    --marfil: #f3eee4; --papel: #e9e2d4; --piedra: #d6ccbb; --superficie: #fffdf9;
+    --tinta: #17140f; --tinta-2: #5a544b; --acento: #a8452a; --acento-claro: #d98a6c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--tinta); }
+  body { font-family: 'Inter Variable', system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: var(--tinta); }
+  #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--tinta); }
+  .capa { position: absolute; inset: 0; }
+
+  /* Palabras con máscara, igual que en el sitio */
+  .w { display: inline-block; overflow: hidden; vertical-align: bottom; padding: 0.14em 0.05em 0.22em; margin: -0.14em -0.05em -0.22em; }
+  .w > span { display: inline-block; will-change: auto; }
+  .rotulo { display: flex; align-items: center; gap: 20px; font-size: 25px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; }
+  .rotulo i { display: block; width: 64px; height: 2px; background: var(--acento); transform-origin: left center; }
+
+  /* ---------- Fondos ---------- */
+  #fondoOscuro { background: radial-gradient(900px 900px at 50% 58%, rgba(168, 69, 42, 0.26), rgba(168, 69, 42, 0) 70%), var(--tinta); }
+  #fondoClaro { background: var(--marfil); }
+  #fondoClaro .halo { position: absolute; width: 1500px; height: 1500px; left: -210px; top: 200px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(168, 69, 42, 0.16), rgba(168, 69, 42, 0)); }
+  #fondoClaro .halo2 { position: absolute; width: 1300px; height: 1300px; left: -500px; top: -420px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(214, 204, 187, 0.95), rgba(214, 204, 187, 0)); }
+  #lineas { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+  #lineas path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .onda { position: absolute; left: 0; top: 0; width: 900px; height: 900px; margin: -450px 0 0 -450px; border-radius: 50%; border: 2px solid var(--acento); }
+  #anilloApertura { position: absolute; left: 0; top: 0; border-radius: 50%; border: 5px solid var(--acento-claro); box-shadow: 0 0 60px rgba(217, 138, 108, 0.8); }
+
+  /* ---------- Gancho ---------- */
+  #gancho { color: var(--marfil); transform-origin: 540px 1140px; }
+  #gancho .rotulo { position: absolute; left: 90px; top: 612px; color: rgba(243, 238, 228, 0.72); }
+  #gancho h1 { position: absolute; left: 86px; top: 676px; font-weight: 300; font-size: 132px; line-height: 1.06; letter-spacing: -0.04em; white-space: nowrap; }
+  #gancho h1 em { font-style: normal; color: var(--acento-claro); }
+  #ecg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+  #ecg path { fill: none; stroke: var(--acento-claro); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+  #ecgPunto { position: absolute; left: 0; top: 0; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: #ffd9c7;
+    box-shadow: 0 0 22px 8px rgba(217, 138, 108, 0.9), 0 0 70px 26px rgba(217, 138, 108, 0.45); }
+  #gancho .marca { position: absolute; left: 90px; top: 1300px; }
+  .marca { display: flex; align-items: center; gap: 20px; font-size: 38px; font-weight: 500; letter-spacing: -0.01em; }
+  .marca b { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--acento); position: relative; }
+  .marca b::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--acento); opacity: var(--lo, 0); transform: scale(var(--ls, 1)); }
+
+  /* ---------- Título de la presentación ---------- */
+  #titulo { text-align: center; }
+  #titulo .rotulo { position: absolute; left: 0; right: 0; top: 272px; justify-content: center; color: var(--tinta-2); font-size: 24px; }
+  #titulo h2 { position: absolute; left: 0; right: 0; top: 312px; font-weight: 300; font-size: 104px; line-height: 1.05; letter-spacing: -0.04em; color: var(--tinta); }
+  #titulo h2 em { font-style: normal; color: var(--acento); }
+
+  /* ---------- Teléfono ---------- */
+  #rig { perspective: 2600px; perspective-origin: 540px 960px; }
+  #brillo { position: absolute; left: 0; top: 0; width: 1100px; height: 1100px; margin: -550px 0 0 -550px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(217, 138, 108, 0.34), rgba(217, 138, 108, 0)); }
+  /* El teléfono se dibuja al triple de tamaño (zoom) y la cámara lo reduce: con perspectiva 3D el navegador
+     no aumenta la resolución por su cuenta, y así los zoom-in salen nítidos. */
+  #telPos { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }
+  #tel { position: absolute; left: -209px; top: -436px; width: 418px; height: 872px; zoom: 3; }
+  .tel-sombra { position: absolute; inset: 18px; border-radius: 60px; box-shadow: 0 70px 110px -10px rgba(23, 20, 15, 0.42), 0 28px 44px -12px rgba(23, 20, 15, 0.36); }
+  .tel-cuerpo { position: absolute; inset: 0; border-radius: 70px; padding: 14px;
+    background: linear-gradient(135deg, #5b554c 0%, #26221c 22%, #0e0c09 50%, #2a2620 78%, #6a6359 100%);
+    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.16), inset 0 0 0 5px #0b0a08; }
+  .tel-boton { position: absolute; width: 4px; background: linear-gradient(90deg, #1a1713, #57514a); border-radius: 2px; }
+  .tel-pantalla { position: relative; width: 390px; height: 844px; border-radius: 56px; overflow: hidden; background: var(--marfil); isolation: isolate; }
+  .tel-estado { position: absolute; left: 0; top: 0; width: 390px; height: 54px; z-index: 5; display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 30px 9px 38px; font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .tel-estado svg { display: block; height: 13px; width: auto; fill: currentColor; }
+  .tel-estado .iconos { display: flex; align-items: center; gap: 6px; }
+  .tel-sitios { position: absolute; left: 0; top: 54px; width: 390px; height: 790px; }
+  .tel-sitios iframe { position: absolute; left: 0; top: 0; width: 390px; height: 790px; border: 0; background: var(--marfil); }
+  .tel-isla { position: absolute; left: 134px; top: 12px; width: 122px; height: 35px; border-radius: 20px; background: #050504; z-index: 6; }
+  .tel-barra { position: absolute; left: 127px; bottom: 9px; width: 136px; height: 5px; border-radius: 3px; background: rgba(23, 20, 15, 0.82); z-index: 6; }
+  .tel-reflejo { position: absolute; inset: 0; z-index: 7; pointer-events: none;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.16) 46%, rgba(255, 255, 255, 0) 58%); background-size: 300% 100%; }
+
+  /* ---------- Rótulos del recorrido ---------- */
+  .tarjeta { position: absolute; padding: 40px 50px 44px; border-radius: 30px; background: var(--tinta); color: var(--marfil);
+    box-shadow: 0 34px 70px -10px rgba(23, 20, 15, 0.5), inset 0 0 0 1.5px rgba(243, 238, 228, 0.14); transform-origin: left bottom; }
+  .tarjeta .rotulo { color: rgba(243, 238, 228, 0.72); font-size: 25px; margin-bottom: 22px; }
+  .tarjeta .rotulo i { background: var(--acento-claro); width: 48px; }
+  .tarjeta p { font-weight: 400; font-size: 100px; line-height: 1.07; letter-spacing: -0.038em; white-space: nowrap; }
+  .tarjeta p em { font-style: normal; color: var(--acento-claro); }
+
+  /* ---------- Cierre ---------- */
+  #cierre { color: var(--marfil); text-align: center; }
+  #cierre .marca { position: absolute; left: 0; right: 0; top: 1136px; justify-content: center; font-size: 36px; }
+  #cierre h2 { position: absolute; left: 0; right: 0; top: 1196px; font-weight: 300; font-size: 92px; line-height: 1.06; letter-spacing: -0.04em; white-space: nowrap; }
+  #cierre h2 em { font-style: normal; color: var(--acento-claro); }
+  #cierre .rotulo { position: absolute; left: 0; right: 0; top: 1318px; justify-content: center; color: rgba(243, 238, 228, 0.82); font-size: 30px; }
+  #cierre .rotulo i { background: var(--acento-claro); }
+  #flecha { position: absolute; left: 498px; top: 1366px; width: 84px; height: 92px; overflow: visible; }
+  #flecha path { fill: none; stroke: var(--marfil); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  #lugarLink { position: absolute; left: 220px; top: 1410px; width: 640px; height: 230px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(217, 138, 108, 0.42), rgba(217, 138, 108, 0)); }
+
+  /* ---------- Transiciones ---------- */
+  .panel { position: absolute; left: 0; top: 0; width: 1080px; height: 2300px; clip-path: polygon(0 150px, 100% 0, 100% calc(100% - 150px), 0 100%); }
+  #destello { background: var(--marfil); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="capa" id="fondoOscuro"></div>
+
+  <div class="capa" id="gancho">
+    <div class="rotulo"><i></i><span class="w"><span>Muy pronto</span></span></div>
+    <h1 id="ganchoTexto"><span class="w"><span>Algo</span></span> <span class="w"><span><em>nuevo</em></span></span><br><span class="w"><span>está</span></span> <span class="w"><span>por</span></span> <span class="w"><span>llegar.</span></span></h1>
+    <svg id="ecg" viewBox="0 0 1080 1920"><defs><clipPath id="ecgCorte"><rect id="ecgRect" x="-60" y="900" width="0" height="480"/></clipPath>
+      <filter id="ecgGlow" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs>
+      <g clip-path="url(#ecgCorte)"><path id="ecgHalo" filter="url(#ecgGlow)" opacity="0.75"/><path id="ecgTrazo"/></g></svg>
+    <div id="ecgPunto"></div>
+    <div class="marca" id="ganchoMarca"><b></b><span>Dra. Eva Herrera Bravo</span></div>
+  </div>
+
+  <div class="capa" id="fondoClaro"><div class="halo2"></div><div class="halo"></div></div>
+  <div id="anilloApertura"></div>
+  <div class="capa" id="ondas"><div class="onda"></div><div class="onda"></div><div class="onda"></div></div>
+  <svg id="lineas" viewBox="0 0 1080 1920"><path id="l1"/><path id="l2"/><path id="l3"/></svg>
+
+  <div class="capa" id="titulo">
+    <div class="rotulo"><i></i><span class="w"><span>Dra. Eva Herrera Bravo</span></span><i></i></div>
+    <h2><span class="w"><span>Nueva</span></span> <span class="w"><span>web<em>.</em></span></span></h2>
+  </div>
+
+  <div class="capa" id="rig">
+    <div id="brillo"></div>
+    <div id="telPos"><div id="tel">
+      <div class="tel-sombra"></div>
+      <div class="tel-boton" style="left:-3px;top:170px;height:34px"></div>
+      <div class="tel-boton" style="left:-3px;top:236px;height:64px"></div>
+      <div class="tel-boton" style="left:-3px;top:316px;height:64px"></div>
+      <div class="tel-boton" style="right:-3px;top:270px;height:104px;transform:scaleX(-1)"></div>
+      <div class="tel-cuerpo">
+        <div class="tel-pantalla">
+          <div class="tel-estado" id="estado">
+            <span>9:41</span>
+            <span class="iconos">
+              <svg viewBox="0 0 19 12"><rect x="0" y="8" width="3.2" height="4" rx="0.8"/><rect x="5.2" y="5.6" width="3.2" height="6.4" rx="0.8"/><rect x="10.4" y="2.8" width="3.2" height="9.2" rx="0.8"/><rect x="15.6" y="0" width="3.2" height="12" rx="0.8"/></svg>
+              <svg viewBox="0 0 17 12"><path d="M8.5 2.6c2.3 0 4.4.9 6 2.4l1.1-1.2C13.700 2 11.200 1 8.500 1S3.300 2 1.400 3.800l1.100 1.200c1.600-1.500 3.700-2.400 6-2.400zm0 3.300c1.400 0 2.700.5 3.700 1.400l1.100-1.200C12 4.900 10.300 4.300 8.500 4.300s-3.500.6-4.800 1.800l1.100 1.200c1-.9 2.300-1.400 3.700-1.400zm0 3.300c-.7 0-1.300.3-1.800.7l1.800 2 1.800-2c-.5-.4-1.100-.7-1.800-.7z"/></svg>
+              <svg viewBox="0 0 28 13" style="height:13.5px"><rect x="0.6" y="0.6" width="23.8" height="11.8" rx="3.6" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.2"/><rect x="2.3" y="2.3" width="20.4" height="8.4" rx="2.2"/><path d="M26 4.300v4.400c.8-.3 1.400-1.200 1.400-2.200S26.800 4.600 26 4.300z" opacity="0.45"/></svg>
+            </span>
+          </div>
+          <div class="tel-sitios">
+            <iframe id="sitio-inicio" data-ruta="/"></iframe>
+            <iframe id="sitio-formacion" data-ruta="/formacion/"></iframe>
+            <iframe id="sitio-final" data-ruta="/"></iframe>
+          </div>
+          <div class="tel-isla"></div>
+          <div class="tel-barra" id="barra"></div>
+          <div class="tel-reflejo" id="reflejo"></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="capa" id="rotulos"></div>
+
+  <div class="capa" id="cierre">
+    <div id="lugarLink"></div>
+    <div class="marca" id="cierreMarca"><b></b><span>Dra. Eva Herrera Bravo</span></div>
+    <h2 id="cierreTexto"><span class="w"><span>Conocé</span></span> <span class="w"><span>la</span></span> <span class="w"><span><em>nueva</em></span></span> <span class="w"><span><em>web</em></span></span></h2>
+    <div class="rotulo" id="cierreRotulo"><i></i><span class="w"><span>Tocá el link</span></span><i></i></div>
+    <svg id="flecha" viewBox="0 0 84 92"><path d="M42 4v80"/><path d="M11 55l31 31 31-31"/></svg>
+  </div>
+
+  <div class="capa" id="barridos"><div class="panel" id="p1" style="background:#a8452a"></div><div class="panel" id="p2" style="background:#17140f"></div></div>
+  <div class="capa" id="destello"></div>
+</div>
+
+<script>
+/* ============================================================
+   Composición guiada por tiempo: seek(t) deja todo en el estado
+   exacto del segundo t. El render la llama cuadro por cuadro.
+============================================================ */
+const FPS = 30, DUR = 18, BEAT = 0.5;
+const SITIO = 'http://localhost:4321';
+const $ = (s) => document.querySelector(s);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const E = {
+  lin: (p) => p,
+  inCubic: (p) => p * p * p,
+  outCubic: (p) => 1 - Math.pow(1 - p, 3),
+  inOutCubic: (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2),
+  inOutSine: (p) => -(Math.cos(Math.PI * p) - 1) / 2,
+  inOutQuart: (p) => (p < 0.5 ? 8 * p * p * p * p : 1 - Math.pow(-2 * p + 2, 4) / 2),
+  outExpo: (p) => (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p)),
+  inExpo: (p) => (p <= 0 ? 0 : Math.pow(2, 10 * p - 10)),
+  outQuint: (p) => 1 - Math.pow(1 - p, 5),
+  outBack: (p) => 1 + 2.70158 * Math.pow(p - 1, 3) + 1.70158 * Math.pow(p - 1, 2),
+};
+/* Fotogramas clave: [tiempo, valor, curva de llegada]. Dos claves con el mismo tiempo son un corte. */
+function kf(t, k) {
+  if (t < k[0][0]) return k[0][1];
+  for (let i = 1; i < k.length; i++) {
+    if (t < k[i][0]) {
+      const a = k[i - 1], b = k[i];
+      return a[1] + (b[1] - a[1]) * (b[2] || E.lin)((t - a[0]) / (b[0] - a[0]));
+    }
+  }
+  return k[k.length - 1][1];
+}
+
+/* ---------- Tiempos de la edición (todos caen en un beat de 120 BPM) ---------- */
+const T = { presenta: 2, recorre: 5, b: 7, c: 9.5, d: 12, cierre: 14 };
+
+/* ---------- Posiciones del sitio (las mide el render) ---------- */
+let A = { inicio: { sobre: 1150, areas: 3700, atencion: 7600 }, formacion: { tiempo: 420 } };
+window.setAnchors = (a) => { A = a; };
+
+window.loadSites = async () => {
+  await document.fonts.ready;
+  for (const id of ['sitio-inicio', 'sitio-formacion', 'sitio-final']) {
+    const f = document.getElementById(id);
+    await new Promise((ok) => { f.addEventListener('load', ok, { once: true }); f.src = SITIO + f.dataset.ruta; });
+    await new Promise((ok) => setTimeout(ok, 700));
+  }
+  ajustar();
+};
+
+/* ---------- Trazos de electrocardiograma ---------- */
+function latido(k) {
+  const n = (v) => (v * k).toFixed(1);
+  return `l${n(10)} ${n(-8)} ${n(8)} ${n(8)}h${n(12)}l${n(8)} ${n(-34)} ${n(13)} ${n(64)} ${n(10)} ${n(-30)}h${n(16)}l${n(9)} ${n(-10)} ${n(10)} ${n(10)}`;
+}
+function trazo(y, desde, hasta, cada, k, fase) {
+  let d = `M${desde} ${y}`;
+  for (let x = desde + fase; x < hasta; x += cada) d += `H${(x - 45 * k).toFixed(1)}${latido(k)}`;
+  return d + `H${hasta}`;
+}
+const ECG_Y = 1140, ECG_K = 3.3, PICOS = [327, 753];
+const dEcg = `M-60 ${ECG_Y}H${PICOS[0] - 45 * ECG_K}${latido(ECG_K)}H${PICOS[1] - 45 * ECG_K}${latido(ECG_K)}H1160`;
+$('#ecgTrazo').setAttribute('d', dEcg);
+$('#ecgHalo').setAttribute('d', dEcg);
+$('#ecgHalo').setAttribute('style', 'stroke-width:10');
+// Tabla x → y para que el punto luminoso siga el trazo.
+const tablaEcg = (() => {
+  const p = $('#ecgTrazo'), largo = p.getTotalLength(), pts = [];
+  for (let i = 0; i <= 1400; i++) { const q = p.getPointAtLength((largo * i) / 1400); pts.push([q.x, q.y]); }
+  return pts;
+})();
+function yEcg(x) {
+  let lo = 0, hi = tablaEcg.length - 1;
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (tablaEcg[m][0] < x) lo = m; else hi = m; }
+  const a = tablaEcg[lo], b = tablaEcg[hi];
+  return a[1] + (b[1] - a[1]) * clamp((x - a[0]) / Math.max(0.001, b[0] - a[0]));
+}
+const LIN = [
+  { el: $('#l1'), y: 470, k: 1.5, cada: 520, vel: 46, par: 0.1 },
+  { el: $('#l2'), y: 1190, k: 2.4, cada: 760, vel: -70, par: 0.2 },
+  { el: $('#l3'), y: 1720, k: 1.8, cada: 600, vel: 58, par: 0.14 },
+];
+LIN.forEach((l) => l.el.setAttribute('d', trazo(l.y, -1600, 2700, l.cada, l.k, 200)));
+
+/* ---------- Rótulos del recorrido ---------- */
+const ROTULOS = [
+  { t0: 5.5, t1: 6.86, rotulo: 'Sobre mí', l1: 'Palabras claras,', l2: 'sin vueltas.', pos: 'left:64px;bottom:372px' },
+  { t0: 7.36, t1: 9.3, rotulo: 'Formación', l1: 'Formación que', l2: 'da confianza.', pos: 'right:64px;bottom:372px' },
+  { t0: 9.86, t1: 11.86, rotulo: 'Áreas de práctica', l1: 'Respuestas a', l2: 'lo que sentís.', pos: 'left:64px;bottom:372px' },
+  { t0: 12.42, t1: 13.9, rotulo: 'Dónde atiende', l1: 'Atención', l2: 'donde estés.', pos: 'right:64px;bottom:372px' },
+];
+const palabras = (txt, acento) => txt.split(' ').map((p) => `<span class="w"><span>${acento ? `<em>${p}</em>` : p}</span></span>`).join(' ');
+ROTULOS.forEach((r) => {
+  const el = document.createElement('div');
+  el.className = 'tarjeta';
+  el.style.cssText = r.pos;
+  el.innerHTML = `<div class="rotulo"><i></i><span>${r.rotulo}</span></div><p>${palabras(r.l1)}<br>${palabras(r.l2, true)}</p>`;
+  $('#rotulos').append(el);
+  r.el = el;
+  r.ws = [...el.querySelectorAll('.w > span')];
+  r.linea = el.querySelector('.rotulo i');
+  r.nombre = el.querySelector('.rotulo span');
+});
+
+/* Entrada y salida de un grupo de palabras con máscara. */
+function animarPalabras(ws, t, t0, paso, dur, tSalida, durSalida) {
+  ws.forEach((w, i) => {
+    const p = E.outExpo(prog(t, t0 + i * paso, t0 + i * paso + dur));
+    let y = (1 - p) * 118;
+    if (tSalida != null && t > tSalida) y = -E.inCubic(prog(t, tSalida + i * 0.02, tSalida + i * 0.02 + durSalida)) * 118;
+    w.style.transform = `translateY(${y.toFixed(2)}%)`;
+  });
+}
+
+function ajustar() {
+  // El titular del gancho no puede pasar del margen derecho.
+  for (const [sel, max] of [['#ganchoTexto', 908], ['#cierreTexto', 940]]) {
+    const el = $(sel);
+    el.style.width = 'max-content';
+    const ancho = el.getBoundingClientRect().width;
+    const base = parseFloat(getComputedStyle(el).fontSize);
+    if (ancho > max) el.style.fontSize = `${(base * max / ancho).toFixed(1)}px`;
+    if (sel === '#cierreTexto') el.style.width = '';
+  }
+}
+
+const el = {
+  gancho: $('#gancho'), fondoClaro: $('#fondoClaro'), anillo: $('#anilloApertura'), ondas: [...document.querySelectorAll('.onda')],
+  lineas: $('#lineas'), titulo: $('#titulo'), tel: $('#telPos'), brillo: $('#brillo'), estado: $('#estado'), barra: $('#barra'), reflejo: $('#reflejo'),
+  inicio: $('#sitio-inicio'), formacion: $('#sitio-formacion'), final: $('#sitio-final'),
+  cierre: $('#cierre'), p1: $('#p1'), p2: $('#p2'), destello: $('#destello'), halo: document.querySelector('#fondoClaro .halo'),
+};
+const ganchoWs = [...document.querySelectorAll('#ganchoTexto .w > span')];
+const tituloWs = [...document.querySelectorAll('#titulo h2 .w > span')];
+const cierreWs = [...document.querySelectorAll('#cierreTexto .w > span')];
+
+/* Cuántas muestras por cuadro: más en los movimientos rápidos (desenfoque de movimiento real). */
+function camara(t) {
+  const s = kf(t, [[1.9, 1.8], [2.9, 1.3, E.outExpo], [5.0, 1.38], [5.42, 2.32, E.outExpo], [6.8, 2.42], [7.0, 2.42],
+    [7.0, 2.78], [9.5, 2.96], [9.5, 2.5], [11.85, 2.64], [12.0, 3.9, E.inExpo], [12.0, 1.7], [12.42, 2.3, E.outExpo], [14.0, 2.44],
+    [14.72, 1.04, E.outExpo], [18, 1.09]]);
+  const cx = kf(t, [[6.8, 540], [7.0, -780, E.inCubic], [7.0, 1860], [7.34, 540, E.outExpo]]);
+  const cy = kf(t, [[1.9, 1190], [2.9, 1056, E.outExpo], [5.0, 1050], [5.42, 962, E.outExpo], [7.0, 950], [7.0, 1000], [9.5, 960], [9.5, 940], [12.0, 975],
+    [12.0, 960], [14.0, 985], [14.72, 640, E.outExpo], [18, 640]]) + (t >= 2.9 && t < 5 || t >= 14.72 ? Math.sin(t * 2.1) * 6 : 0);
+  const ry = kf(t, [[1.9, -20], [2.9, -10, E.outExpo], [5.0, 8, E.inOutSine], [5.42, 4, E.outExpo], [7.0, -3], [7.0, -6], [9.5, 4], [9.5, 6], [12.0, -4],
+    [12.0, -5], [14.0, 4], [14.72, -13, E.outExpo], [18, -4, E.inOutSine]]);
+  const rx = kf(t, [[1.9, 16], [2.9, 5, E.outExpo], [5.0, 3], [5.42, 2, E.outExpo], [7.0, 3], [7.0, 4], [9.5, 1], [9.5, 1], [12.0, 3],
+    [12.0, 3], [14.0, 1], [14.72, 7, E.outExpo], [18, 4]]);
+  const rz = kf(t, [[1.9, -4], [2.9, 0, E.outExpo], [6.8, 0], [7.0, -3, E.inCubic], [7.0, 3], [7.34, 0, E.outExpo], [11.85, 0], [12.0, -6, E.inExpo],
+    [12.0, 7], [12.42, 0, E.outExpo], [14.0, 0], [14.72, -2.5, E.outExpo], [18, -1]]);
+  return { s, cx, cy, rx, ry, rz };
+}
+
+window.muestras = (t) => {
+  const r = [[1.66, 2.0, 12], [5.0, 5.36, 10], [6.78, 7.3, 14], [9.2, 9.8, 6], [11.84, 12.36, 10], [14.0, 14.5, 8]];
+  for (const [a, b, n] of r) if (t >= a - 1e-6 && t < b) return n;
+  return 1;
+};
+
+window.seek = (t) => {
+  const beat = (t % BEAT) / BEAT;            // 0 → 1 dentro de cada tiempo
+  const golpe = Math.exp(-beat * 5);         // 1 en el golpe, decae
+
+  /* ================= GANCHO (0–2) ================= */
+  const enGancho = t < 2.05;
+  el.gancho.style.display = enGancho ? '' : 'none';
+  if (enGancho) {
+    const x = -100 + 1280 * (t / 1.5);
+    $('#ecgRect').setAttribute('width', Math.max(0, x + 60));
+    const punto = $('#ecgPunto');
+    punto.style.transform = `translate(${x.toFixed(1)}px, ${yEcg(clamp(x, -60, 1160)).toFixed(1)}px)`;
+    punto.style.opacity = x < 1140 ? 1 : 0;
+    // El trazo late cuando el punto pasa por cada pico (0,5 s y 1 s).
+    const cerca = Math.max(Math.exp(-Math.abs(t - 0.5) * 9), Math.exp(-Math.abs(t - 1.0) * 9));
+    $('#ecgHalo').setAttribute('opacity', (0.55 + cerca * 0.45).toFixed(3));
+    $('#ecgTrazo').style.strokeWidth = (4 + cerca * 2.5).toFixed(2);
+
+    animarPalabras(ganchoWs, t, 0.16, 0.2, 0.55);
+    const rot = el.gancho.querySelector('.rotulo');
+    rot.querySelector('i').style.transform = `scaleX(${E.outExpo(prog(t, 0.05, 0.6))})`;
+    rot.querySelector('.w > span').style.transform = `translateY(${(1 - E.outExpo(prog(t, 0.1, 0.65))) * 118}%)`;
+    const marca = $('#ganchoMarca');
+    marca.style.opacity = prog(t, 1.0, 1.3);
+    marca.style.transform = `translateY(${(1 - E.outCubic(prog(t, 1.0, 1.4))) * 24}px)`;
+    marca.querySelector('b').style.setProperty('--lo', (0.5 * (1 - beat)).toFixed(3));
+    marca.querySelector('b').style.setProperty('--ls', (1 + beat * 2.4).toFixed(3));
+    // El gancho se acerca apenas y, al final, la cámara lo atraviesa.
+    const zoom = 1 + 0.03 * (t / 2) + 0.5 * E.inExpo(prog(t, 1.62, 2.0));
+    el.gancho.style.transform = `scale(${zoom.toFixed(4)})`;
+  }
+
+  /* ================= FONDO ================= */
+  // La apertura: el fondo claro nace del pulso y cubre todo en el beat del segundo 2.
+  const radio = kf(t, [[1.6, 0], [2.0, 1320, E.inCubic]]);
+  const claro = 1 - prog(t, 14.0, 14.36);
+  el.fondoClaro.style.clipPath = t < 2 ? `circle(${radio.toFixed(1)}px at 540px ${ECG_Y}px)` : 'none';
+  el.fondoClaro.style.opacity = claro;
+  el.fondoClaro.style.display = t < 1.6 || claro <= 0 ? 'none' : '';
+  const an = el.anillo;
+  an.style.display = t >= 1.6 && t < 2 ? '' : 'none';
+  an.style.width = an.style.height = `${radio * 2}px`;
+  an.style.transform = `translate(${540 - radio}px, ${ECG_Y - radio}px)`;
+  el.halo.style.transform = `translate(${Math.sin(t * 0.7) * 90}px, ${Math.cos(t * 0.5) * 120}px)`;
+
+  /* ================= CÁMARA ================= */
+  let { s, cx, cy, rx, ry, rz } = camara(t);
+  // Velocidad de la cámara: suaviza las muestras del desenfoque de movimiento.
+  const c2 = camara(t + 0.003), nM = window.muestras(t);
+  const vel = (Math.hypot(c2.cx - cx, c2.cy - cy) + Math.abs(c2.s - s) / s * 620 + Math.abs(c2.rz - rz) * 12) / 0.003;
+  const suavizado = nM > 1 ? Math.min(26, vel * (0.75 / FPS / nM) * 0.6) : 0;
+  // Golpe de zoom con cada tiempo del compás durante el recorrido.
+  if (t >= 5.5 && t < 14) s *= 1 + 0.007 * golpe;
+  const visible = prog(t, 1.9, 2.22);
+  const desenfoque = kf(t, [[1.9, 34], [2.72, 0, E.outCubic]]);
+  el.tel.style.opacity = visible;
+  el.tel.style.filter = desenfoque + suavizado > 0.05 ? `blur(${((desenfoque + suavizado) * 3 / s).toFixed(2)}px)` : 'none';
+  el.tel.style.transform = `translate3d(${cx.toFixed(2)}px, ${cy.toFixed(2)}px, 0) scale(${(s / 3).toFixed(5)}) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg) rotateZ(${rz.toFixed(3)}deg)`;
+  el.reflejo.style.backgroundPosition = `${(50 + ry * 4.2 + t * 1.5).toFixed(2)}% 0`;
+  // Resplandor detrás del teléfono, solo sobre el fondo oscuro.
+  el.brillo.style.opacity = 1 - claro;
+  el.brillo.style.transform = `translate(${cx}px, ${cy}px) scale(${(1 + 0.05 * golpe).toFixed(4)})`;
+
+  /* Ondas del pulso detrás del teléfono y líneas de ECG con paralaje. */
+  const oscuro = claro < 0.5;
+  el.ondas.forEach((o, i) => {
+    const f = (((t - 2) / 2 + i / 3) % 1 + 1) % 1;
+    const base = oscuro ? 0.62 : 1;
+    o.style.transform = `translate(${540 + (cx - 540) * 0.6}px, ${cy + (oscuro ? 0 : 20)}px) scale(${(base * (0.62 + f * 0.95)).toFixed(4)})`;
+    o.style.opacity = t < 2 ? 0 : (Math.min(1, f * 6) * (1 - f) * 0.5).toFixed(3);
+    o.style.borderColor = oscuro ? '#d98a6c' : '#a8452a';
+  });
+  el.lineas.style.opacity = prog(t, 2.0, 2.7);
+  LIN.forEach((l) => {
+    const largo = l.cada;
+    const x = (((t * l.vel) % largo) + largo) % largo - largo + (540 - cx) * l.par + ry * l.par * 14;
+    l.el.style.transform = `translate(${x.toFixed(2)}px, ${((cy - 960) * -l.par * 0.5).toFixed(2)}px)`;
+    l.el.style.stroke = oscuro ? 'rgba(217,138,108,0.3)' : 'rgba(168,69,42,0.34)';
+  });
+
+  /* ================= TÍTULO DE LA PRESENTACIÓN ================= */
+  const enTitulo = t >= 2.1 && t < 5.2;
+  el.titulo.style.display = enTitulo ? '' : 'none';
+  if (enTitulo) {
+    animarPalabras(tituloWs, t, 2.38, 0.14, 0.6, 4.72, 0.26);
+    const rot = el.titulo.querySelector('.rotulo');
+    const pr = E.outExpo(prog(t, 2.2, 2.8));
+    rot.querySelectorAll('i').forEach((i, n) => { i.style.transform = `scaleX(${pr})`; i.style.transformOrigin = n ? 'left center' : 'right center'; });
+    rot.querySelector('.w > span').style.transform = `translateY(${((1 - E.outExpo(prog(t, 2.24, 2.84))) * 118).toFixed(2)}%)`;
+    rot.style.opacity = 1 - prog(t, 4.7, 4.92);
+  }
+
+  /* ================= PANTALLA DEL TELÉFONO ================= */
+  const activo = t < T.b ? 'inicio' : t < T.c ? 'formacion' : 'inicio';
+  el.inicio.style.zIndex = activo === 'inicio' ? 2 : 1;
+  el.formacion.style.zIndex = activo === 'formacion' ? 2 : 1;
+  el.final.style.zIndex = 3;
+  el.final.style.opacity = prog(t, 14.0, 14.16);
+  // La barra de estado acompaña a la apertura oscura del sitio.
+  const aclara = prog(t, 3.4, 3.68);
+  el.estado.style.background = aclara <= 0 ? '#17140f' : aclara >= 1 ? '#f3eee4' : `color-mix(in srgb, #f3eee4 ${aclara * 100}%, #17140f)`;
+  el.estado.style.color = aclara < 0.5 ? '#f3eee4' : '#17140f';
+  el.barra.style.background = aclara < 0.5 ? 'rgba(243,238,228,0.85)' : 'rgba(23,20,15,0.82)';
+
+  /* ================= RÓTULOS ================= */
+  ROTULOS.forEach((r) => {
+    const on = t >= r.t0 && t < r.t1;
+    r.el.style.display = on ? '' : 'none';
+    if (!on) return;
+    const pin = E.outExpo(prog(t, r.t0, r.t0 + 0.45));
+    const pout = E.inCubic(prog(t, r.t1 - 0.2, r.t1));
+    r.el.style.clipPath = `inset(0 ${((1 - pin) * 100).toFixed(2)}% 0 0 round 30px)`;
+    r.el.style.transform = `translate(${((1 - pin) * -46).toFixed(2)}px, ${(pout * -34).toFixed(2)}px) scale(${(1 - pout * 0.05 + 0.012 * golpe * pin).toFixed(4)})`;
+    r.el.style.opacity = 1 - pout;
+    r.linea.style.transform = `scaleX(${E.outExpo(prog(t, r.t0 + 0.12, r.t0 + 0.6))})`;
+    r.nombre.style.opacity = prog(t, r.t0 + 0.14, r.t0 + 0.4);
+    animarPalabras(r.ws, t, r.t0 + 0.12, 0.065, 0.5);
+  });
+
+  /* ================= CIERRE ================= */
+  const enCierre = t >= 14.2;
+  el.cierre.style.display = enCierre ? '' : 'none';
+  if (enCierre) {
+    const marca = $('#cierreMarca');
+    marca.style.opacity = prog(t, 14.4, 14.7);
+    marca.style.transform = `translateY(${((1 - E.outExpo(prog(t, 14.4, 15.0))) * 30).toFixed(2)}px)`;
+    marca.querySelector('b').style.setProperty('--lo', (0.55 * (1 - beat)).toFixed(3));
+    marca.querySelector('b').style.setProperty('--ls', (1 + beat * 2.6).toFixed(3));
+    animarPalabras(cierreWs, t, 14.56, 0.12, 0.6);
+    const rot = $('#cierreRotulo');
+    const pr = E.outExpo(prog(t, 15.2, 15.8));
+    rot.querySelectorAll('i').forEach((i, n) => { i.style.transform = `scaleX(${pr})`; i.style.transformOrigin = n ? 'left center' : 'right center'; });
+    rot.querySelector('.w > span').style.transform = `translateY(${((1 - E.outExpo(prog(t, 15.22, 15.8))) * 118).toFixed(2)}%)`;
+    // La flecha cae en el segundo 15,5 y después asiente con cada tiempo.
+    const fl = $('#flecha');
+    const entra = E.outBack(prog(t, 15.5, 15.9));
+    const rebote = t >= 15.9 ? 20 * Math.pow(1 - beat, 2.2) : 0;
+    fl.style.opacity = prog(t, 15.5, 15.66);
+    fl.style.transform = `translateY(${((1 - entra) * -90 + rebote).toFixed(2)}px)`;
+    const lugar = $('#lugarLink');
+    lugar.style.opacity = (prog(t, 15.6, 16.1) * (0.55 + 0.45 * golpe)).toFixed(3);
+    lugar.style.transform = `scale(${(0.92 + 0.1 * golpe).toFixed(4)})`;
+  }
+
+  /* ================= TRANSICIONES ================= */
+  const y1 = kf(t, [[9.2, 1930], [9.46, -200, E.inOutCubic], [9.74, -2420, E.inCubic]]);
+  const y2 = kf(t, [[9.27, 1930], [9.5, -200, E.inOutCubic], [9.5, -200], [9.8, -2420, E.inOutCubic]]);
+  el.p1.style.transform = `translateY(${y1.toFixed(1)}px)`;
+  el.p2.style.transform = `translateY(${y2.toFixed(1)}px)`;
+  el.p1.style.display = el.p2.style.display = t >= 9.18 && t < 9.82 ? '' : 'none';
+  const fl = Math.max(0.5 * (1 - prog(t, 5.0, 5.22)) * (t >= 5 ? 1 : 0), 0.7 * (1 - prog(t, 12.0, 12.3)) * (t >= 12 ? 1 : 0), 0.3 * prog(t, 11.9, 12.0) * (t < 12 ? 1 : 0));
+  el.destello.style.opacity = fl;
+  el.destello.style.display = fl > 0.002 ? '' : 'none';
+
+  /* ================= SITIOS: reloj y scroll de cada uno ================= */
+  const a = A.inicio, f = A.formacion;
+  let yInicio;
+  if (t < T.b) yInicio = kf(t, [[5.04, 0], [6.3, a.sobre - 64, E.inOutCubic], [7.0, a.sobre - 10]]);
+  else if (t < T.d) yInicio = kf(t, [[9.5, a.areas - 96], [9.7, a.areas - 96], [11.6, a.areas + 640, E.inOutSine], [12.0, a.areas + 700]]);
+  else yInicio = kf(t, [[12.0, a.atencion - 92], [12.3, a.atencion - 70], [13.7, a.atencion + 560, E.inOutSine], [14.2, a.atencion + 600]]);
+  const yForm = kf(t, [[7.0, f.tiempo - 250], [7.25, f.tiempo - 230], [9.2, f.tiempo + 760, E.inOutSine], [9.6, f.tiempo + 800]]);
+  // El reloj del sitio de inicio arranca cuando entra el teléfono; la apertura corre un 25 % más rápido.
+  const vtInicio = t < 2.12 ? 0 : t < 5 ? (t - 2.12) * 1.4 : 4.032 + (t - 5);
+  return {
+    sitios: {
+      inicio: { vt: vtInicio, y: yInicio },
+      formacion: { vt: Math.max(0, t - 6.9), y: yForm },
+      final: { vt: Math.max(0, t - 13.72), y: kf(t, [[15.2, 0], [18, 318, E.inOutSine]]) },
+    },
+  };
+};
+</script>
+</body>
+</html>

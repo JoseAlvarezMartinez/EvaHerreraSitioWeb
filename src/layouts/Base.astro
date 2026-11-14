@@ -2,11 +2,16 @@
 import '@fontsource-variable/inter/index.css';
 import '../styles/global.css';
 import '../styles/movimiento.css';
+// La tipografía se precarga para que el título no cambie de forma al cargar.
+import interLatina from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
 import { ClientRouter } from 'astro:transitions';
-import { sitio, paginas, type IdPagina } from '../data/sitio';
+import { sitio, type IdPagina } from '../data/sitio';
+import Apertura from '../components/Apertura.astro';
 import Cabecera from '../components/Cabecera.astro';
+import Miga from '../components/Miga.astro';
 import Pie from '../components/Pie.astro';
+import Seo from '../components/Seo.astro';
 import Siguiente from '../components/Siguiente.astro';
 
 interface Props {
@@ -22,11 +27,8 @@ interface Props {
 
 const { titulo, descripcion = sitio.descripcion, actual, conLlamado = true, noIndexar = false } = Astro.props;
 
-const esInterior = Astro.url.pathname !== '/' && !noIndexar;
-const pag = paginas.find((p) => p.nombre === titulo);
-const total = String(paginas.length).padStart(2, '0');
-const firma = `${sitio.tratamiento} ${sitio.nombreCompleto}`;
-const tituloCompleto = titulo ? `${titulo} — ${firma}` : `${firma} — ${sitio.especialidad}`;
+// Las páginas internas llevan la barra de ubicación; la portada y la 404, no.
+const conMiga = Boolean(titulo) && !noIndexar;
 
 const paso = {
   old: { name: 'pagina-sale', duration: '0.6s', easing: 'cubic-bezier(0.7, 0, 0.2, 1)', fillMode: 'both' },
@@ -40,14 +42,9 @@ const transicion = { forwards: paso, backwards: paso };
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{tituloCompleto}</title>
-    <meta name="description" content={descripcion} />
-    {noIndexar && <meta name="robots" content="noindex" />}
+    <Seo titulo={titulo} descripcion={descripcion} noIndexar={noIndexar} />
     <meta name="theme-color" content="#f3eee4" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_AR" />
-    <meta property="og:title" content={tituloCompleto} />
-    <meta property="og:description" content={descripcion} />
+    <link rel="preload" href={interLatina} as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <ClientRouter />
     <script is:inline>
@@ -67,40 +64,10 @@ const transicion = { forwards: paso, backwards: paso };
     </script>
   </head>
   <body>
-    <div class="apertura" aria-hidden="true">
-      <div class="apertura__hoja apertura__hoja--a">
-        <p class="apertura__nombre"><span>{firma}</span></p>
-      </div>
-      <div class="apertura__hoja apertura__hoja--b">
-        <p class="apertura__rol etiqueta">{sitio.especialidad}</p>
-      </div>
-      <div class="apertura__corte">
-        <span class="apertura__linea apertura__linea--izq"></span>
-        <svg class="apertura__pico" viewBox="0 0 160 120" width="160" height="120" fill="none">
-          <path pathLength="1" d="M0 60h28l12-10 10 10h14l10-50 16 96 12-46h18l10-12 12 12h18"></path>
-        </svg>
-        <span class="apertura__linea apertura__linea--der"></span>
-      </div>
-    </div>
+    <Apertura />
     <a class="saltar" href="#contenido">Ir al contenido</a>
     <Cabecera />
-    {
-      esInterior && (
-        <nav class="miga" aria-label="Ubicación en el sitio">
-          <div class="marco miga__in">
-            <a class="volver" href="/">
-              <span aria-hidden="true">←</span> Volver al inicio
-            </a>
-            <p class="miga__ruta">
-              <a href="/">Inicio</a>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page">{titulo}</span>
-              {pag && <span class="miga__cuenta">Página {pag.numero} de {total}</span>}
-            </p>
-          </div>
-        </nav>
-      )
-    }
+    {conMiga && titulo && <Miga titulo={titulo} />}
     <main id="contenido">
       <slot />
       {actual && <Siguiente actual={actual} />}

@@ -6,18 +6,10 @@ let observadorApariciones: IntersectionObserver | undefined;
 let escuchaTiempo: (() => void) | undefined;
 let fijarMenu: ((abierto: boolean) => void) | undefined;
 let menuAbierto = false;
-let ultimoScroll = 0;
 
-/* ---------- Cabecera: línea al bajar, se esconde al bajar y vuelve al subir ---------- */
+/* ---------- Cabecera: gana sombra apenas se empieza a bajar ---------- */
 function cabecera() {
-  const cab = document.querySelector<HTMLElement>('[data-cab]');
-  if (!cab) return;
-  const y = window.scrollY;
-  cab.classList.toggle('con-linea', y > 8);
-  if (menuAbierto || y < 240) cab.classList.remove('oculta');
-  else if (y > ultimoScroll + 6) cab.classList.add('oculta');
-  else if (y < ultimoScroll - 6) cab.classList.remove('oculta');
-  ultimoScroll = y;
+  document.querySelector<HTMLElement>('[data-cab]')?.classList.toggle('con-linea', window.scrollY > 8);
 }
 
 /* ---------- Menú a pantalla completa ---------- */
@@ -33,7 +25,6 @@ function menu() {
     boton.setAttribute('aria-expanded', String(abierto));
     boton.textContent = abierto ? 'Cerrar' : 'Menú';
     document.documentElement.classList.toggle('sin-scroll', abierto);
-    if (abierto) document.querySelector('[data-cab]')?.classList.remove('oculta');
   };
 
   fijarMenu(false);
@@ -142,26 +133,6 @@ function lineaDeTiempo() {
   medir();
 }
 
-/* ---------- Índice de la portada: el panel sigue al ítem señalado ---------- */
-function indice() {
-  const raiz = document.querySelector<HTMLElement>('[data-indice]');
-  if (!raiz) return;
-  const items = raiz.querySelectorAll<HTMLElement>('[data-indice-item]');
-  const resumenes = raiz.querySelectorAll<HTMLElement>('[data-indice-resumen]');
-
-  const activar = (i: number) => {
-    raiz.style.setProperty('--activo', String(i));
-    items.forEach((el, n) => el.classList.toggle('activo', n === i));
-    resumenes.forEach((el, n) => el.classList.toggle('activo', n === i));
-  };
-
-  items.forEach((el, i) => {
-    el.addEventListener('pointerenter', () => activar(i));
-    el.addEventListener('focus', () => activar(i));
-  });
-  activar(0);
-}
-
 /* ---------- Formulario de contacto ---------- */
 function formulario() {
   const form = document.querySelector<HTMLFormElement>('[data-formulario]');
@@ -248,13 +219,11 @@ function apertura() {
 let escuchaGlobal = false;
 
 document.addEventListener('astro:page-load', () => {
-  ultimoScroll = window.scrollY;
   cabecera();
   menu();
   partirEnPalabras();
   apariciones();
   lineaDeTiempo();
-  indice();
   formulario();
   apertura();
   movimiento();

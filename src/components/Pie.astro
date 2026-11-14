@@ -47,8 +47,8 @@ const anio = new Date().getFullYear();
         {sitio.matriculas.map((m) => <p class="tenue">{m}</p>)}
       </div>
 
-      <div class="pie__col">
-        <h2 class="etiqueta">Sitio</h2>
+      <nav class="pie__col" aria-labelledby="pie-sitio">
+        <p class="pie__titulo etiqueta" id="pie-sitio">Sitio</p>
         <ul>
           <li><a class="enlace" href="/">Inicio</a></li>
           {
@@ -61,13 +61,13 @@ const anio = new Date().getFullYear();
             ))
           }
         </ul>
-      </div>
+      </nav>
 
-      <div class="pie__col">
-        <h2 class="etiqueta">Atención</h2>
+      <nav class="pie__col" aria-labelledby="pie-atencion">
+        <p class="pie__titulo etiqueta" id="pie-atencion">Atención</p>
         <ul>
           {
-            lugares.consultorios.map((l) => (
+            lugares.consultorios.filter((l) => !l.proximamente).map((l) => (
               <li>
                 <a class="enlace" href="/donde-atiende/">
                   {l.nombre}
@@ -77,10 +77,10 @@ const anio = new Date().getFullYear();
           }
           <li><a class="enlace" href="/donde-atiende/#teleconsulta">{lugares.teleconsulta.titulo}</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <div class="pie__col">
-        <h2 class="etiqueta">Contacto</h2>
+      <address class="pie__col" aria-labelledby="pie-contacto">
+        <p class="pie__titulo etiqueta" id="pie-contacto">Contacto</p>
         <ul>
           <li>
             <a class="enlace" href={enlaceWhatsapp()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
@@ -96,7 +96,7 @@ const anio = new Date().getFullYear();
             ))
           }
         </ul>
-      </div>
+      </address>
     </div>
 
     <div class="pie__base">

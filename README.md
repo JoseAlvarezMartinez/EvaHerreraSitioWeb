@@ -20,6 +20,12 @@ Para generar la versión final (queda en la carpeta `dist/`):
 npm run build
 ```
 
+Para revisar que no haya errores de tipos en el código ni en los datos:
+
+```bash
+npm run check
+```
+
 ## Dónde se edita el contenido
 
 Todo el texto vive en `src/data/`. No hace falta tocar el diseño.
@@ -66,6 +72,39 @@ formulario en un servicio como Formspree y pegá su dirección en
 Usan OpenStreetMap, sin clave ni cuenta. Solo hay que cargar `lat` y `lng` de
 cada lugar en `src/data/lugares.ts`.
 
+## Buscadores (SEO)
+
+- **Dominio:** se define en un solo lugar, `astro.config.mjs` (constante `DOMINIO`).
+  Con el dominio cargado, cada página lleva su URL canónica y su imagen para
+  compartir, y se generan `sitemap-index.xml` y la línea `Sitemap:` de `robots.txt`.
+  Sin dominio, nada de eso se publica.
+- **Título y descripción** de cada página: `src/data/sitio.ts` (`descripcion` de cada
+  página y la descripción general del sitio).
+- **Datos estructurados:** la portada publica la ficha de la médica (nombre,
+  especialidad, email, consultorio, días y horarios) en el formato que leen los
+  buscadores. Sale sola de `src/data/`; los datos que digan `[COMPLETAR]` no se
+  publican. La arma `src/lib/seo.ts`.
+- **Horarios para buscadores:** en `src/data/lugares.ts`, el campo `atencion` repite
+  los días y horarios en formato de máquina. Si cambian `dias` u `horarios`, hay que
+  cambiar también `atencion`.
+- **Imagen para compartir:** se recorta sola del retrato. Para que salga en buena
+  calidad conviene una foto de al menos 1200 px de ancho.
+
+## Cómo está armado el código
+
+| Carpeta            | Qué contiene                                                          |
+| ------------------ | --------------------------------------------------------------------- |
+| `src/data/`        | Todo el contenido. Es lo único que hace falta tocar para editar textos |
+| `src/pages/`       | Una página por archivo, con sus estilos propios al final               |
+| `src/layouts/`     | `Base.astro`: la estructura común a todas las páginas                  |
+| `src/components/`  | Piezas compartidas (cabecera, pie, folio, sección, foto, mapa, SEO)    |
+| `src/lib/`         | Utilidades: enlaces, fotos y datos para buscadores                     |
+| `src/scripts/`     | `sitio.ts` (comportamiento) y `movimiento.ts` (efectos con el cursor)  |
+| `src/styles/`      | `global.css` (sistema de diseño) y `movimiento.css` (animaciones)      |
+
+En `global.css` cada selector se define una sola vez, en su sección; el índice
+está al principio del archivo.
+
 ## Diseño
 
 - Colores, tipografías y espaciados: `src/styles/global.css`, al principio.
@@ -92,7 +131,7 @@ cada lugar en `src/data/lugares.ts`.
   pantallas táctiles.
 - **Al hacer scroll:** los textos grandes entran palabra por palabra, las líneas
   se dibujan, las fotos y los mapas se descubren con una cortina, y la cabecera
-  se esconde al bajar y vuelve al subir, con una barra fina de progreso.
+  muestra una barra fina de progreso.
 - **Ligadas al scroll** (trazo de la línea de tiempo, barra de progreso): funcionan en Chrome, Edge y Safari recientes. En
   navegadores que no las soportan, esos elementos quedan quietos y se ven bien.
 - Para usarlas en contenido nuevo alcanza con un atributo en la etiqueta:
@@ -104,5 +143,5 @@ cada lugar en `src/data/lugares.ts`.
 
 1. Completar todos los `[COMPLETAR]`.
 2. Cargar las fotos.
-3. Cuando el dominio esté definido, agregarlo en `astro.config.mjs` (`site`).
-4. `npm run build` y subir la carpeta `dist/`.
+3. Cargar el dominio en `astro.config.mjs` (constante `DOMINIO`).
+4. `npm run check` y `npm run build`, y subir la carpeta `dist/`.

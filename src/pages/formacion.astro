@@ -2,41 +2,35 @@
 import Base from '../layouts/Base.astro';
 import Folio from '../components/Folio.astro';
 import Seccion from '../components/Seccion.astro';
+import Rodillo from '../components/Rodillo.astro';
 import { pagina } from '../data/sitio';
 import { formacion } from '../data/formacion';
 
 const p = pagina('formacion');
-/* Los años se parten en dígitos para que entren rodando, uno detrás del otro. */
-const digitos = (texto: string) => [...texto];
 ---
 
 <Base titulo={p.nombre} descripcion={p.descripcion} actual="formacion">
   <Folio numero={p.numero} nombre={p.nombre} titulo={p.titulo} enfasis={p.enfasis} intro={formacion.intro} />
 
-  <section class="tiempo" aria-label="Línea de tiempo">
+  <section class="tiempo" aria-labelledby="tiempo-titulo">
     <div class="marco">
+      <h2 class="solo-lectores" id="tiempo-titulo">Línea de tiempo</h2>
       <div class="tiempo__via">
         <ol class="tiempo__lista" data-tiempo>
           {
             formacion.lineaDeTiempo.map((h) => (
               <li class="hito" data-hito>
                 <p class="hito__anio" data-aparece>
-                  <span class="hito__desde">
-                    <span class="solo-lectores">{h.anio}</span>
-                    <span class="rodillo" aria-hidden="true">
-                      {digitos(h.anio).map((d, n) => (
-                        <span class="rodillo__d" style={`--d:${n}`}>
-                          <span>{d}</span>
-                        </span>
-                      ))}
-                    </span>
-                  </span>
+                  <time class="hito__desde" datetime={h.anio}>
+                    <Rodillo texto={h.anio} />
+                  </time>
                   {h.hasta && <span class="hito__hasta etiqueta">hasta {h.hasta}</span>}
+                  {h.enCurso && <span class="hito__hasta etiqueta">Actualidad</span>}
                 </p>
                 <span class="hito__nodo" data-nodo aria-hidden="true" />
                 <div class="hito__cuerpo tarjeta" data-aparece style="--i:1">
                   <p class="hito__tipo etiqueta">{h.tipo}</p>
-                  <h2 class="titulo-m">{h.titulo}</h2>
+                  <h3 class="titulo-m">{h.titulo}</h3>
                   <p class="hito__inst">{h.institucion}</p>
                   {h.detalle && <p class="texto chico tenue">{h.detalle}</p>}
                 </div>
@@ -53,17 +47,10 @@ const digitos = (texto: string) => [...texto];
     <ul class="filas tabla">
       {
         formacion.cursos.map((c, i) => (
-          <li class="tabla__fila" data-aparece data-linea style={`--i:${i % 5}`}>
-            <span class="tabla__anio serif">
-              <span class="solo-lectores">{c.anio}</span>
-              <span class="rodillo" aria-hidden="true">
-                {digitos(c.anio).map((d, n) => (
-                  <span class="rodillo__d" style={`--d:${n}`}>
-                    <span>{d}</span>
-                  </span>
-                ))}
-              </span>
-            </span>
+          <li class="tabla__fila fila-viva" data-aparece data-linea style={`--i:${i % 5}`}>
+            <time class="tabla__anio" datetime={c.anio}>
+              <Rodillo texto={c.anio} />
+            </time>
             <span class="tabla__nombre titulo-s">{c.nombre}</span>
             <span class="tabla__inst tenue chico">{c.institucion}</span>
           </li>
@@ -299,7 +286,7 @@ const digitos = (texto: string) => [...texto];
     gap: 0.7rem;
   }
 
-  .hito__cuerpo h2 {
+  .hito__cuerpo h3 {
     max-width: 18em;
   }
 
@@ -357,35 +344,9 @@ const digitos = (texto: string) => [...texto];
     color: var(--acento);
   }
 
-  /* --- Años que ruedan --- */
-  .rodillo {
-    display: inline-flex;
-  }
-
-  .rodillo__d {
-    display: block;
-    overflow: hidden;
-    padding-block: 0.14em;
-    margin-block: -0.14em;
-  }
-
-  .rodillo__d > span {
-    display: block;
-  }
-
   @media (prefers-reduced-motion: no-preference) {
     /* El año solo se funde: el movimiento lo hacen los dígitos. */
     :global(.js) .hito__anio[data-aparece] {
-      transform: none;
-    }
-
-    :global(.js) .rodillo__d > span {
-      transform: translateY(115%);
-      transition: transform 0.95s var(--curva);
-      transition-delay: calc(var(--d, 0) * 75ms + var(--i, 0) * 55ms + 60ms);
-    }
-
-    :global(.js) .visible .rodillo__d > span {
       transform: none;
     }
 
@@ -452,44 +413,19 @@ const digitos = (texto: string) => [...texto];
     }
   }
 
-  /* ---------- Cursos: filas que responden al cursor ---------- */
+  /* ---------- Cursos ----------
+     El comportamiento de la fila (entrada y respuesta al cursor) es el de la
+     clase global "fila-viva", en movimiento.css. */
   .tabla__fila {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 3fr);
     column-gap: var(--canal);
     align-items: center;
-    padding: 1.35rem 1.25rem;
-    transition:
-      opacity 0.65s var(--curva) calc(var(--i, 0) * 70ms),
-      transform 0.65s var(--curva) calc(var(--i, 0) * 70ms),
-      background-color 0.6s ease,
-      padding-left 0.6s var(--curva);
-  }
-
-  /* Barra de acento que baja por el borde izquierdo al pasar el cursor. */
-  .tabla__fila::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    bottom: 0;
-    left: 0;
-    width: 2px;
-    background: var(--acento);
-    transform: scaleY(0);
-    transform-origin: top center;
-    transition: transform 0.6s var(--curva);
-  }
-
-  .tabla__fila:hover {
-    padding-left: 2rem;
-    background: rgba(255, 253, 249, 0.7);
-  }
-
-  .tabla__fila:hover::after {
-    transform: scaleY(1);
+    padding-block: 1.35rem;
   }
 
   .tabla__anio {
+    font-weight: 300;
     font-size: 1.5rem;
     line-height: 1;
     letter-spacing: -0.03em;
@@ -501,21 +437,10 @@ const digitos = (texto: string) => [...texto];
     color: var(--acento);
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    :global(.js) .tabla__fila[data-aparece]:not(.visible) {
-      transform: translateX(-2rem);
-    }
-  }
-
   @media (max-width: 699px) {
     .tabla__fila {
       grid-template-columns: 1fr;
       row-gap: 0.4rem;
-      padding-inline: 0.75rem;
-    }
-
-    .tabla__fila:hover {
-      padding-left: 1.25rem;
     }
   }
 

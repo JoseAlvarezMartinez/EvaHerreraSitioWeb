@@ -2,7 +2,7 @@
 /* Muestra la foto si el archivo existe en src/assets/imagenes/.
    Si no existe, muestra un bloque de color con las iniciales. */
 import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { buscarFoto } from '../lib/fotos';
 
 interface Props {
   archivo: string;
@@ -29,11 +29,7 @@ const {
   paralaje = false,
 } = Astro.props;
 
-const fotos = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/imagenes/**/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG}',
-  { eager: true },
-);
-const foto = fotos[`/src/assets/imagenes/${archivo}`]?.default;
+const foto = buscarFoto(archivo);
 ---
 
 <div class="foto-caja" style={`aspect-ratio: ${proporcion}`}>
@@ -46,6 +42,7 @@ const foto = fotos[`/src/assets/imagenes/${archivo}`]?.default;
         widths={anchos}
         sizes={sizes}
         loading={prioridad ? 'eager' : 'lazy'}
+        fetchpriority={prioridad ? 'high' : undefined}
         data-paralaje={paralaje ? '' : undefined}
       />
     ) : (

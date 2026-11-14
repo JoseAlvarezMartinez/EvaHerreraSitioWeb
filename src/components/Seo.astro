@@ -1,0 +1,81 @@
+---
+/* Todo lo que va en el <head> para buscadores y redes: título, descripción,
+   URL canónica, imagen para compartir y datos estructurados.
+   La URL canónica, la imagen y el sitemap necesitan el dominio del sitio:
+   se define en astro.config.mjs (DOMINIO). */
+import { getImage } from 'astro:assets';
+import { sitio } from '../data/sitio';
+import { sobre } from '../data/sobre';
+import { buscarFoto } from '../lib/fotos';
+import { datosDeLaMedica, datosDeLaRuta, datosDelSitio, firma, urlAbsoluta } from '../lib/seo';
+
+interface Props {
+  /** Título de la página. Vacío en la portada. */
+  titulo?: string;
+  descripcion: string;
+  noIndexar?: boolean;
+}
+
+const { titulo, descripcion, noIndexar = false } = Astro.props;
+
+const base = Astro.site;
+const ruta = Astro.url.pathname;
+const esPortada = ruta === '/';
+const tituloCompleto = titulo ? `${titulo} — ${firma}` : `${firma} — ${sitio.especialidad}`;
+const canonica = noIndexar ? undefined : urlAbsoluta(ruta, base);
+
+// Imagen para compartir: el retrato, recortado a la proporción que piden las redes
+// (1200 × 630). Si la foto es más angosta, se usa su ancho real: no se agranda.
+const retrato = buscarFoto(sobre.foto);
+const anchoCompartir = retrato ? Math.min(1200, retrato.width) : 0;
+const altoCompartir = Math.round((anchoCompartir * 630) / 1200);
+const compartir = retrato
+  ? await getImage({
+      src: retrato,
+      width: anchoCompartir,
+      height: altoCompartir,
+      fit: 'cover',
+      position: 'top',
+      format: 'jpg',
+    })
+  : undefined;
+const imagen = compartir ? urlAbsoluta(compartir.src, base) : undefined;
+
+const estructurados: object[] = [];
+if (esPortada) {
+  estructurados.push(datosDeLaMedica(base, imagen));
+  if (base) estructurados.push(datosDelSitio(base));
+} else if (base && titulo && !noIndexar) {
+  estructurados.push(
+    datosDeLaRuta(base, [
+      { nombre: 'Inicio', ruta: '/' },
+      { nombre: titulo, ruta },
+    ]),
+  );
+}
+---
+
+<title>{tituloCompleto}</title>
+<meta name="description" content={descripcion} />
+{noIndexar && <meta name="robots" content="noindex" />}
+{canonica && <link rel="canonical" href={canonica} />}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={firma} />
+<meta property="og:locale" content="es_AR" />
+<meta property="og:title" content={tituloCompleto} />
+<meta property="og:description" content={descripcion} />
+{canonica && <meta property="og:url" content={canonica} />}
+{
+  imagen && (
+    <>
+      <meta property="og:image" content={imagen} />
+      <meta property="og:image:width" content={String(anchoCompartir)} />
+      <meta property="og:image:height" content={String(altoCompartir)} />
+      <meta property="og:image:alt" content={`Retrato de la ${firma}`} />
+    </>
+  )
+}
+<meta name="twitter:card" content={imagen ? 'summary_large_image' : 'summary'} />
+
+{estructurados.map((datos) => <script is:inline type="application/ld+json" set:html={JSON.stringify(datos)} />)}

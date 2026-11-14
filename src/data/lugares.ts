@@ -1,55 +1,88 @@
 /* ------------------------------------------------------------------
    DÓNDE ATIENDE
-   Direcciones, días, horarios y coberturas son EJEMPLOS: reemplazar todos.
+   La dirección, los días y los horarios son los reales. El teléfono de turnos
+   y las coberturas siguen siendo EJEMPLOS: reemplazarlos.
 
    Mapa: "lat" y "lng" son las coordenadas del lugar. Para obtenerlas, buscá
    la dirección en Google Maps, hacé clic derecho sobre el punto y copiá los
-   dos números. Los valores actuales apuntan al centro de Buenos Aires y son
-   solo de muestra.
+   dos números. Las actuales apuntan al centro de Garín, no a la puerta de la
+   clínica: hay que ajustarlas.
+
+   Un lugar con "proximamente: true" se muestra como anuncio, sin datos ni mapa.
+   Cuando esté definido, completá sus datos y pasalo a false.
 ------------------------------------------------------------------- */
+
+type Dia = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+
+interface Consultorio {
+  nombre: string;
+  /** Rótulo chico arriba del nombre. */
+  tipo: string;
+  /** true: se muestra como anuncio, sin datos ni mapa. */
+  proximamente: boolean;
+  direccion: string;
+  /** Localidad tal como se lee en la página. */
+  localidad: string;
+  /** Ciudad y provincia por separado: son para los buscadores (no se ven). */
+  ciudad: string;
+  provincia: string;
+  dias: string;
+  horarios: string;
+  /** Lo mismo que "dias" y "horarios", en formato para buscadores: días en
+      inglés y horas en 24 h. Tiene que decir lo mismo que los dos de arriba. */
+  atencion: { dias: Dia[]; abre: string; cierra: string }[];
+  turnos: string;
+  obrasSociales: string[];
+  nota: string;
+  lat: number;
+  lng: number;
+}
 
 export const lugares = {
   intro:
-    'Atiendo en dos lugares y por teleconsulta. Elegí el que te quede más cómodo.',
+    'Atiendo en consultorio y por teleconsulta. Elegí lo que te quede más cómodo.',
 
   consultorios: [
     {
-      nombre: 'Consultorio [COMPLETAR]',
-      tipo: 'Consultorio particular',
-      direccion: 'Av. [COMPLETAR] 1234, piso 3',
-      localidad: '[COMPLETAR: barrio, ciudad]',
-      dias: 'Lunes y miércoles [COMPLETAR]',
-      horarios: '14 a 19 h [COMPLETAR]',
+      nombre: 'Clínica de la Familia',
+      tipo: 'Consultorio',
+      proximamente: false,
+      direccion: 'Rastreador de Fournier 3150',
+      localidad: 'Garín, Buenos Aires',
+      ciudad: 'Garín',
+      provincia: 'Buenos Aires',
+      dias: 'Lunes y viernes',
+      horarios: '15 a 18 h',
+      atencion: [{ dias: ['Monday', 'Friday'], abre: '15:00', cierra: '18:00' }],
       turnos: '+54 9 11 0000-0000 [COMPLETAR]',
       obrasSociales: [
         'Obra social [COMPLETAR]',
         'Prepaga [COMPLETAR]',
-        'Prepaga [COMPLETAR]',
         'Particulares',
       ],
-      nota: 'Edificio con ascensor. [COMPLETAR: accesos, estacionamiento, transporte.]',
-      lat: -34.6037, // [COMPLETAR]
-      lng: -58.3816, // [COMPLETAR]
+      nota: '',
+      lat: -34.4226, // [COMPLETAR] aproximado: centro de Garín
+      lng: -58.7397, // [COMPLETAR] aproximado: centro de Garín
     },
     {
-      nombre: 'Sanatorio [COMPLETAR]',
-      tipo: 'Consultorios externos y cirugías',
-      direccion: 'Calle [COMPLETAR] 567',
-      localidad: '[COMPLETAR: barrio, ciudad]',
-      dias: 'Martes y jueves [COMPLETAR]',
-      horarios: '9 a 13 h [COMPLETAR]',
-      turnos: '+54 11 0000-0000 [COMPLETAR]',
-      obrasSociales: [
-        'Obra social [COMPLETAR]',
-        'Obra social [COMPLETAR]',
-        'Prepaga [COMPLETAR]',
-        'Particulares',
-      ],
-      nota: 'Los turnos se piden en la central del sanatorio. [COMPLETAR]',
-      lat: -34.5889, // [COMPLETAR]
-      lng: -58.3974, // [COMPLETAR]
+      nombre: 'Consultorios externos y cirugías',
+      tipo: 'Próximamente',
+      proximamente: true,
+      direccion: '',
+      localidad: '',
+      ciudad: '',
+      provincia: '',
+      dias: '',
+      horarios: '',
+      atencion: [],
+      turnos: '',
+      obrasSociales: [],
+      // En un lugar "próximamente", la nota es el texto del anuncio.
+      nota: 'Pronto voy a sumar este lugar de atención. Acá vas a encontrar la dirección, los días y los horarios.',
+      lat: 0,
+      lng: 0,
     },
-  ],
+  ] satisfies Consultorio[],
 
   teleconsulta: {
     titulo: 'Teleconsulta',
@@ -61,9 +94,9 @@ export const lugares = {
       'Te conectás a la hora acordada, con tus estudios a mano.',
     ],
     datos: [
-      { etiqueta: 'Días', valor: 'Viernes [COMPLETAR]' },
-      { etiqueta: 'Horarios', valor: '10 a 14 h [COMPLETAR]' },
-      { etiqueta: 'Plataforma', valor: '[COMPLETAR: Meet, Zoom, etc.]' },
+      { etiqueta: 'Días', valor: 'Lunes a sábados' },
+      { etiqueta: 'Horarios', valor: 'A coordinar' },
+      { etiqueta: 'Plataforma', valor: 'Videollamada de WhatsApp' },
       { etiqueta: 'Cobertura', valor: '[COMPLETAR]' },
     ],
     aviso:

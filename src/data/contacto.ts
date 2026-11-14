@@ -1,6 +1,6 @@
 /* ------------------------------------------------------------------
    CONTACTO
-   Teléfono, email y redes son EJEMPLOS: reemplazar todos.
+   El email es el real. El teléfono y las redes son EJEMPLOS: reemplazarlos.
 ------------------------------------------------------------------- */
 
 export const contacto = {
@@ -15,7 +15,7 @@ export const contacto = {
     mensajeInicial: 'Hola, quisiera pedir un turno con la Dra. Herrera Bravo.',
   },
 
-  email: 'contacto@[COMPLETAR].com.ar',
+  email: 'evahb2@hotmail.com',
 
   // Redes. Borrá las que no se usen.
   redes: [
