@@ -238,7 +238,7 @@ function trazo(y, desde, hasta, cada, k, fase) {
   for (let x = desde + fase; x < hasta; x += cada) d += `H${(x - 45 * k).toFixed(1)}${latido(k)}`;
   return d + `H${hasta}`;
 }
-const ECG_Y = 1140, ECG_K = 3.3, PICOS = [327, 753];
+const ECG_Y = 1140, ECG_K = 3.3, PICOS = [430, 830];
 const dEcg = `M-60 ${ECG_Y}H${PICOS[0] - 45 * ECG_K}${latido(ECG_K)}H${PICOS[1] - 45 * ECG_K}${latido(ECG_K)}H1160`;
 $('#ecgTrazo').setAttribute('d', dEcg);
 $('#ecgHalo').setAttribute('d', dEcg);
@@ -332,7 +332,7 @@ function camara(t) {
 }
 
 window.muestras = (t) => {
-  const r = [[1.66, 2.0, 12], [5.0, 5.36, 10], [6.78, 7.3, 14], [9.2, 9.8, 6], [11.84, 12.36, 10], [14.0, 14.5, 8]];
+  const r = [[1.66, 2.0, 12], [5.0, 5.36, 10], [6.78, 7.3, 14], [11.84, 12.36, 10], [14.0, 14.5, 8]];
   for (const [a, b, n] of r) if (t >= a - 1e-6 && t < b) return n;
   return 1;
 };
@@ -345,7 +345,7 @@ window.seek = (t) => {
   const enGancho = t < 2.05;
   el.gancho.style.display = enGancho ? '' : 'none';
   if (enGancho) {
-    const x = -100 + 1280 * (t / 1.5);
+    const x = 30 + 800 * t; // pasa por los picos en 0,5 s y 1 s, justo con el latido de la música
     $('#ecgRect').setAttribute('width', Math.max(0, x + 60));
     const punto = $('#ecgPunto');
     punto.style.transform = `translate(${x.toFixed(1)}px, ${yEcg(clamp(x, -60, 1160)).toFixed(1)}px)`;
