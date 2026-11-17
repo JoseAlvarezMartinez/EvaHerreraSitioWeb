@@ -6,6 +6,7 @@ import '../styles/movimiento.css';
 import interLatina from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
 import { ClientRouter } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
 import { sitio, type IdPagina } from '../data/sitio';
 import Apertura from '../components/Apertura.astro';
 import Cabecera from '../components/Cabecera.astro';
@@ -73,6 +74,9 @@ const transicion = { forwards: paso, backwards: paso };
       {actual && <Siguiente actual={actual} />}
     </main>
     <Pie conLlamado={conLlamado} />
+    {/* Vercel Web Analytics: va en el <body> para que, con ClientRouter, cada
+        navegación entre páginas cuente como una visita nueva. */}
+    <Analytics />
     <script>
       import '../scripts/sitio.ts';
     </script>
