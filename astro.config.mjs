@@ -12,4 +12,9 @@ export default defineConfig({
   integrations: DOMINIO ? [sitemap()] : [],
   devToolbar: { enabled: false },
   build: { format: 'directory' },
+   adapter: vercel({
+    webAnalytics: {
+      enabled: true, // set to false when using @vercel/analytics@1.4.0
+    },
+  }),
 });

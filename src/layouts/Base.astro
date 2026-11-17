@@ -63,6 +63,7 @@ const transicion = { forwards: paso, backwards: paso };
         document.addEventListener('astro:after-swap', () => raiz.classList.add('js'));
       })();
     </script>
+     <Analytics />
   </head>
   <body>
     <Apertura />
@@ -76,7 +77,6 @@ const transicion = { forwards: paso, backwards: paso };
     <Pie conLlamado={conLlamado} />
     {/* Vercel Web Analytics: va en el <body> para que, con ClientRouter, cada
         navegación entre páginas cuente como una visita nueva. */}
-    <Analytics />
     <script>
       import '../scripts/sitio.ts';
     </script>
